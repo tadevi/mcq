@@ -2,9 +2,10 @@ import { IUser } from '@entities';
 
 
 export interface IUserDao {
-    getOne: (email: string) => Promise<IUser | null>;
+    getOne: (username: string) => Promise<IUser | null>;
     getAll: () => Promise<IUser[]>;
     add: (user: IUser) => Promise<void>;
+    addMany: (users: IUser[]) => Promise<void>;
     update: (user: IUser) => Promise<void>;
     delete: (id: number) => Promise<void>;
 }
@@ -15,7 +16,7 @@ export class UserDao implements IUserDao {
     /**
      * @param email
      */
-    public async getOne(email: string): Promise<IUser | null> {
+    public async getOne(username: string): Promise<IUser | null> {
         // TODO
         return [] as any;
     }
@@ -37,6 +38,12 @@ export class UserDao implements IUserDao {
     public async add(user: IUser): Promise<void> {
         // TODO
         return {} as any;
+    }
+
+
+    public  async  addMany(user: IUser[]): Promise<void> {
+        // TODO
+        return {} as any
     }
 
 

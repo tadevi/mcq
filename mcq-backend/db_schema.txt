@@ -1,0 +1,66 @@
+db={
+users=[
+    {
+    _id: "djsalkjsalkgdslkdsa",
+    username: "tuankietpq",
+    pwdHassh: "asldkfjadslkjdsalkjsgkasjdgsg",
+    role: "0",
+    email: "tuankietpq@gmail.com",
+    phoneNumber: "09xxxxxxxx",
+    fullName: "Luong Tuan Kiet",
+    grade: "10A1",
+    schoolName: "THCS-THPT Phu Quoi",
+    tests_to_do:[001,002,003]
+    },
+ {
+    _id: "djsalkjsalkgdslkdsa",
+    username: "tuankietpq",
+    pwdHassh: "asldkfjadslkjdsalkjsgkasjdgsg",
+    role: "0",
+    email: "tuankietpq@gmail.com",
+    phoneNumber: "09xxxxxxxx",
+    fullName: "Luong Tuan Kiet",
+    grade: "10A1",
+    schoolName: "THCS-THPT Phu Quoi"
+    },
+     {
+        _id: "djsalkjsalkgdslkdsa",
+        username: "tuankietpq",
+        pwdHassh: "asldkfjadslkjdsalkjsgkasjdgsg",
+        role: "0",
+        email: "tuankietpq@gmail.com",
+        phoneNumber: "09xxxxxxxx",
+        fullName: "Luong Tuan Kiet",
+        grade: "10A1",
+        schoolName: "THCS-THPT Phu Quoi"
+        },
+],
+    exams=[{
+    id:"10a1xyzsdfd",
+    content:"http://xyz.com/test.pdf",
+    explain: "http://xyz.com/explain.pdf",
+    answers: [a,b,d,e,c,...],
+    type: 0,//de luyen tap
+    },
+    {
+    id: "11axksjdflkdsfjldsa",
+    content:"http://xyz.com/test.pdf",
+    explain: "http://xyz.com/explain.pdf",
+    answers:[a,b,c,d,e,...],
+    type: 1,//de thi
+    }
+    ],
+    test_result=[{
+        exam_id: "10a1xyzsdfd",
+        student_id: "12345",
+        answers: [a,b,c,x,y,z,...],
+        points: 7.25
+        },
+        {
+        exam_id: "10a1xyzsdfd",
+        student_id: "12345",
+        answers: [a,b,c,x,y,z,...],
+        points: 7.25
+        },
+    ]
+}
