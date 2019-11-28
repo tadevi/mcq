@@ -116,9 +116,17 @@ class DashBoard extends Component {
                 />
             )
         }
+        const getHeader=()=>{
+            let header=''
+            const items=routeConfig.filter(item=>pathname===item.route)
+            if(items.length>0){
+                header=items[0].content
+            }
+            return header
+        }
         return (
             <div style={{overflow: 'hidden'}}>
-                <DashBoardMenu header={routeConfig.filter(item=>pathname===item.route)[0].content}/>
+                <DashBoardMenu header={getHeader()}/>
                 <Container fluid>
                     <Grid stackable columns={2} className="fill-content">
                         <Grid.Row stretched>
