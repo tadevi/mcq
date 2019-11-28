@@ -29,8 +29,8 @@
     "webpack-cli": "^3.3.10"
   },
   "scripts": {
-    "start": "COPY dev-config.js src\\config.js /y&& react-scripts start",
-    "build": "COPY pro-config.js src\\config.js /y&& react-scripts build",
+    "start": "cp dev-config.js src/config.js && react-scripts start",
+    "build": "cp pro-config.js src/config.js && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
