@@ -57,8 +57,11 @@ class DisplayTest extends React.Component {
             remain: 0,
             loading: false,
             openResult: false,
-            confirmModal: false
+            confirmModal: false,
+            width:0,
+            height:0
         }
+        this.updateWindowDimensions=this.updateWindowDimensions.bind(this)
     }
 
     setLoading(loading) {
@@ -106,6 +109,8 @@ class DisplayTest extends React.Component {
     }
 
     componentDidMount() {
+        this.updateWindowDimensions()
+        window.addEventListener('resize',this.updateWindowDimensions)
         this.props.history.replace()
         const id = this.props.match.params.id
         const state = this.props.location.state
@@ -138,6 +143,14 @@ class DisplayTest extends React.Component {
 
     componentWillUnmount() {
         clearInterval(this.timer)
+        window.removeEventListener('resize',this.updateWindowDimensions)
+    }
+
+    updateWindowDimensions(){
+        this.setState({
+            width: window.innerWidth,
+            height: window.innerHeight
+        })
     }
 
     handleAnswerChange(index, answer) {
@@ -148,12 +161,25 @@ class DisplayTest extends React.Component {
         }, () => this.putAnswers())
     }
 
+    getQuestionPerRow(){
+        if(!this.state.width){
+            return 5
+        }
+        const expectedRows=this.state.width/4/46
+        if(expectedRows>5.5)
+            return 5
+        if(expectedRows>3.5)
+            return 4
+        return 2
+    }
+
     render() {
         const {exam, answer} = this.state
         const {remain, loading, answers} = this.state
         if (_.isEmpty(exam)) {
             return <Loader active/>
         }
+        console.log(this.getQuestionPerRow())
         return (
             <div>
                 <Menu color='blue' inverted borderless size={'mini'}>
@@ -202,7 +228,7 @@ class DisplayTest extends React.Component {
                             <RenderAnswerBoard
                                 initValue={answers}
                                 totalQuestion={exam.total}
-                                questionPerRows={isMobile ? 4 : 5}
+                                questionPerRows={this.getQuestionPerRow()}
                                 onChange={this.handleAnswerChange.bind(this)}/>
                         </Grid.Column>
                     </Grid>
