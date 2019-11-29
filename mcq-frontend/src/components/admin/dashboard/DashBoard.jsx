@@ -59,6 +59,7 @@ const style = {
 
 const segmentStyle = {
     minHeight: '80vh',
+    maxHeight: '85vh',
     overflow: 'auto',
     margin: '10px'
 }
@@ -116,11 +117,11 @@ class DashBoard extends Component {
                 />
             )
         }
-        const getHeader=()=>{
-            let header=''
-            const items=routeConfig.filter(item=>pathname===item.route)
-            if(items.length>0){
-                header=items[0].content
+        const getHeader = () => {
+            let header = ''
+            const items = routeConfig.filter(item => pathname === item.route)
+            if (items.length > 0) {
+                header = items[0].content
             }
             return header
         }
