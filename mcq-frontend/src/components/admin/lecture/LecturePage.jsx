@@ -151,11 +151,7 @@ class LecturePage extends React.Component {
         if (lectures.totalPage > 1)
             return (
                 <Pagination
-                    boundaryRange={0}
-                    defaultActivePage={1}
-                    ellipsisItem={null}
-                    siblingRange={1}
-                    activePage={lectures.page || 0}
+                    activePage={lectures.page}
                     onPageChange={(e, data) => this.getLectures(data.activePage)}
                     totalPages={lectures.totalPage || 0}
                 />
@@ -236,7 +232,7 @@ class LecturePage extends React.Component {
                                    placeholder='Chủ đề'
                                    name='contents'
                                    parentId={this.state.subjectId}
-                                   onDelete={()=>this.reloadData()}
+                                   onDelete={() => this.reloadData()}
                                    onContentSelect={this.onContentItemSelect}
                     />
                 </Grid.Column>

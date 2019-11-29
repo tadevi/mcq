@@ -241,12 +241,9 @@ class ExamPage extends Component {
         if (exams.totalPage > 1)
             return (
                 <Pagination
-                    boundaryRange={0}
-                    ellipsisItem={null}
-                    siblingRange={1}
-                    activePage={exams.page || 0}
+                    activePage={exams.page}
                     onPageChange={(e, data) => this.getExam(data.activePage)}
-                    totalPages={exams.totalPage || 0}
+                    totalPages={exams.totalPage}
                 />
             )
         return <div/>

@@ -1,9 +1,9 @@
 import Axios from "axios"
 import {Cookies} from "react-cookie";
-import {SERVER_API} from "../config";
+import {DEBUG, SERVER_API} from "../config";
 
 const cookies = new Cookies()
-export let DEBUG = true
+
 
 export function userCall(method, url, onSuccess, onFailed, onError, onFinally) {
     Axios({
@@ -161,15 +161,18 @@ export function transformUrl(url) {
     return url
 }
 
-export function getRole(role){
-    if(role==='admin'){
+export function getRole(role) {
+    if (role === 'admin') {
         return 'Quản trị viên'
-    }
-    else if(role==='user'){
+    } else if (role === 'user') {
         return 'Học sinh'
-    }
-    else if(role==='teacher'){
+    } else if (role === 'teacher') {
         return 'Giáo viên'
     }
     return ''
+}
+
+export function parseBlob(data, onFinish) {
+    new Response(data).text().then(data => onFinish(JSON.parse(data))).catch(() => {
+    })
 }

@@ -4,7 +4,7 @@ import Moment from "react-moment";
 import {withRouter} from "react-router-dom";
 import Axios from "axios";
 import {SERVER_API} from "../../../../config";
-import {getToken} from "../../../../utils/ApiUtils";
+import {getToken, parseBlob} from "../../../../utils/ApiUtils";
 import fileDownload from "js-file-download";
 
 class TableExam extends React.Component {
@@ -132,8 +132,10 @@ class TableExam extends React.Component {
             }
         ).then(res => {
             if (res.data.type === 'application/json') {
-                this.setError('Dữ liệu không tồn tại!')
-                this.timeout = setTimeout(() => this.setError(''), 3000)
+                parseBlob(res.data, ({message}) => {
+                    this.setError(message)
+                    this.timeout = setTimeout(() => this.setError(''), 3000)
+                })
             } else {
                 let blob = new Blob([res.data], {type: res.headers['content-type']})
                 fileDownload(blob, `${name}.xlsx`)

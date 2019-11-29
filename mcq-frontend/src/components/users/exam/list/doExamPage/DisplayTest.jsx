@@ -9,7 +9,6 @@ import {CircleButton} from "../../CircleButton";
 import {transformUrl, userCallWithData} from "../../../../../utils/ApiUtils";
 import {APP_NAME, SERVER_API, SERVER_FILES} from "../../../../../config";
 import ExamResult from "../components/ExamResult";
-import {isMobile} from 'react-device-detect'
 
 const RenderAnswerBoard = ({questionPerRows, totalQuestion, onChange, initValue}) => {
     const arr = [];
@@ -23,8 +22,13 @@ const RenderAnswerBoard = ({questionPerRows, totalQuestion, onChange, initValue}
         }
         arr.push(brr)
     }
+    if (arr[arr.length - 1].length < questionPerRows) {
+        const remain = questionPerRows - arr[arr.length - 1].length
+        for (let i = 0; i < remain; ++i)
+            arr[arr.length - 1].push(-1)
+    }
     return (
-        <Grid centered stretched>
+        <Grid centered>
             {
                 arr.map((it, rowIndex) => {
                     return (
@@ -33,10 +37,14 @@ const RenderAnswerBoard = ({questionPerRows, totalQuestion, onChange, initValue}
                                 it.map((item, colIndex) => {
                                     return (
                                         <Grid.Column key={'col' + colIndex} style={{marginRight: '10px'}}>
-                                            <CircleButton text={item}
-                                                          onChange={onChange.bind(this, rowIndex * questionPerRows + colIndex)}
-                                                          defaultValue={initValue[rowIndex * questionPerRows + colIndex]}
-                                            />
+                                            {item === -1 ?
+                                                <div/>
+                                                :
+                                                <CircleButton text={item}
+                                                              onChange={onChange.bind(this, rowIndex * questionPerRows + colIndex)}
+                                                              defaultValue={initValue[rowIndex * questionPerRows + colIndex]}
+                                                />
+                                            }
                                         </Grid.Column>
                                     )
                                 })
@@ -58,10 +66,10 @@ class DisplayTest extends React.Component {
             loading: false,
             openResult: false,
             confirmModal: false,
-            width:0,
-            height:0
+            width: 0,
+            height: 0
         }
-        this.updateWindowDimensions=this.updateWindowDimensions.bind(this)
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
 
     setLoading(loading) {
@@ -110,7 +118,7 @@ class DisplayTest extends React.Component {
 
     componentDidMount() {
         this.updateWindowDimensions()
-        window.addEventListener('resize',this.updateWindowDimensions)
+        window.addEventListener('resize', this.updateWindowDimensions)
         this.props.history.replace()
         const id = this.props.match.params.id
         const state = this.props.location.state
@@ -143,10 +151,10 @@ class DisplayTest extends React.Component {
 
     componentWillUnmount() {
         clearInterval(this.timer)
-        window.removeEventListener('resize',this.updateWindowDimensions)
+        window.removeEventListener('resize', this.updateWindowDimensions)
     }
 
-    updateWindowDimensions(){
+    updateWindowDimensions() {
         this.setState({
             width: window.innerWidth,
             height: window.innerHeight
@@ -161,14 +169,14 @@ class DisplayTest extends React.Component {
         }, () => this.putAnswers())
     }
 
-    getQuestionPerRow(){
-        if(!this.state.width){
+    getQuestionPerRow() {
+        if (!this.state.width) {
             return 5
         }
-        const expectedRows=this.state.width/4/46
-        if(expectedRows>5.5)
+        const expectedRows = this.state.width / 4 / 46
+        if (expectedRows > 5.5)
             return 5
-        if(expectedRows>3.5)
+        if (expectedRows > 3.5)
             return 4
         return 2
     }

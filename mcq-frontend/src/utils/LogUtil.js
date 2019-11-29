@@ -1,4 +1,4 @@
-import {DEBUG} from "./ApiUtils";
+import {DEBUG} from "../config";
 
 export function Log(message, ...args) {
     if (DEBUG) {

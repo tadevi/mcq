@@ -1,5 +1,5 @@
 import React from "react";
-import {getToken, userCall, userCallWithData} from "../../../utils/ApiUtils";
+import {getToken, parseBlob, userCall, userCallWithData} from "../../../utils/ApiUtils";
 import {SERVER_API} from "../../../config";
 import {
     Button,
@@ -187,12 +187,9 @@ class AccountManagement extends React.Component {
         if (totalPage > 1)
             return (
                 <Pagination
-                    boundaryRange={0}
-                    ellipsisItem={null}
-                    siblingRange={1}
                     activePage={data ? data.page : 0}
                     onPageChange={(e, data) => this.fetchPage(data.activePage)}
-                    totalPages={totalPage ? totalPage : 0}
+                    totalPages={totalPage}
                 />
             )
         return <div/>
@@ -305,8 +302,10 @@ class AccountManagement extends React.Component {
             }
         ).then(res => {
             if (res.data.type === 'application/json') {
-                this.setError('Dữ liệu không tồn tại!')
-                this.timeout = setTimeout(() => this.setError(''), 3000)
+                parseBlob(res.data, ({message}) => {
+                    this.setError(message)
+                    this.timeout = setTimeout(() => this.setError(''), 3000)
+                })
             } else {
                 let blob = new Blob([res.data], {type: res.headers['content-type']})
                 fileDownload(blob, 'users.xlsx')
@@ -328,8 +327,10 @@ class AccountManagement extends React.Component {
             }
         ).then(res => {
             if (res.data.type === 'application/json') {
-                this.setError('Người dùng chưa có dữ liệu bài làm!')
-                this.timeout = setTimeout(() => this.setError(''), 3000)
+                parseBlob(res.data, ({message}) => {
+                    this.setError(message)
+                    this.timeout = setTimeout(() => this.setError(''), 3000)
+                })
             } else {
                 let blob = new Blob([res.data], {type: res.headers['content-type']})
                 fileDownload(blob, `${email}.xlsx`)
