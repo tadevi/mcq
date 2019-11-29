@@ -183,11 +183,11 @@ class AccountManagement extends React.Component {
     }
 
     renderPagination() {
-        const {data, totalPage} = this.state
+        const {page, totalPage} = this.state
         if (totalPage > 1)
             return (
                 <Pagination
-                    activePage={data ? data.page : 0}
+                    activePage={page || 1}
                     onPageChange={(e, data) => this.fetchPage(data.activePage)}
                     totalPages={totalPage}
                 />

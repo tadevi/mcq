@@ -241,7 +241,7 @@ class ExamPage extends Component {
         if (exams.totalPage > 1)
             return (
                 <Pagination
-                    activePage={exams.page}
+                    activePage={exams.page || 1}
                     onPageChange={(e, data) => this.getExam(data.activePage)}
                     totalPages={exams.totalPage}
                 />

@@ -151,9 +151,9 @@ class LecturePage extends React.Component {
         if (lectures.totalPage > 1)
             return (
                 <Pagination
-                    activePage={lectures.page}
+                    activePage={lectures.page || 1}
                     onPageChange={(e, data) => this.getLectures(data.activePage)}
-                    totalPages={lectures.totalPage || 0}
+                    totalPages={lectures.totalPage}
                 />
             )
         return <div/>

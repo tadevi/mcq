@@ -187,7 +187,6 @@ class DisplayTest extends React.Component {
         if (_.isEmpty(exam)) {
             return <Loader active/>
         }
-        console.log(this.getQuestionPerRow())
         return (
             <div>
                 <Menu color='blue' inverted borderless size={'mini'}>
