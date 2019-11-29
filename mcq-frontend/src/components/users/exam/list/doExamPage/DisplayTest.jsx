@@ -9,6 +9,7 @@ import {CircleButton} from "../../CircleButton";
 import {transformUrl, userCallWithData} from "../../../../../utils/ApiUtils";
 import {APP_NAME, SERVER_API, SERVER_FILES} from "../../../../../config";
 import ExamResult from "../components/ExamResult";
+import {isMobile} from 'react-device-detect'
 
 const RenderAnswerBoard = ({questionPerRows, totalQuestion, onChange, initValue}) => {
     const arr = [];
@@ -201,7 +202,7 @@ class DisplayTest extends React.Component {
                             <RenderAnswerBoard
                                 initValue={answers}
                                 totalQuestion={exam.total}
-                                questionPerRows={5}
+                                questionPerRows={isMobile ? 4 : 5}
                                 onChange={this.handleAnswerChange.bind(this)}/>
                         </Grid.Column>
                     </Grid>

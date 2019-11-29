@@ -130,7 +130,7 @@ class SimpleAppBar extends React.Component {
     render() {
         const {fixed, header} = this.props
         return (
-            <Menu color='blue' fixed={fixed || false} inverted borderless size={'mini'}>
+            <Menu color='blue' fixed={fixed || false} inverted borderless size={'mini'} stackable>
                 <Menu.Item position='left' style={{paddingRight: '50px'}} header as={Link} to={'/'}>
                     <Image size='mini' src={`${SERVER_FILES}/logo.png`} style={{marginRight: '1.5em'}}/>
                     <span style={{fontSize: '12pt'}}>{APP_NAME}</span>

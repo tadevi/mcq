@@ -127,7 +127,7 @@ class AppBar extends React.Component {
 
     render() {
         return (
-            <Menu color={'blue'} fixed='top' inverted size={'mini'}>
+            <Menu color={'blue'} fixed='top' inverted size={'mini'} stackable>
                 <Menu.Menu position='left'>
                     <Menu.Item header as='a' style={{paddingRight: '50px'}}>
                         <Image size='mini' src={`${SERVER_FILES}/logo.png`} style={{marginRight: '1.5em'}}/>
