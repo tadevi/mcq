@@ -3,7 +3,7 @@ import {Button, Dropdown, Header, Image, Menu} from 'semantic-ui-react'
 import {Link, withRouter} from 'react-router-dom'
 import {getToken, getUserInfo, removeToken, setToken} from "../../../../utils/ApiUtils";
 import {APP_NAME, SERVER_FILES} from "../../../../config";
-
+import './exam.css'
 /** This file has been checked!
  *
  */
@@ -135,10 +135,9 @@ class SimpleAppBar extends React.Component {
                     <Image size='mini' src={`${SERVER_FILES}/logo.png`} style={{marginRight: '1.5em'}}/>
                     <span style={{fontSize: '12pt'}}>{APP_NAME}</span>
                 </Menu.Item>
-                <Header as={'h3'}
-                        style={{ color: 'white', fontFamily: 'Roboto, Tahoma, sans-serif'}}>
+                <b className='vertical-center'>
                     {header || ''}
-                </Header>
+                </b>
                 <Menu.Menu position='right'>
                     <Menu.Item style={{fontSize: '10pt', fontWeight: '500'}}>
                         {this.renderButtonGroup()}

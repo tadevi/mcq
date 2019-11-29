@@ -106,7 +106,11 @@ class LoginScreen extends React.Component {
             if (user) {
                 if (user.role === 'admin') {
                     this.props.history.push('/admin/')
-                } else {
+                } 
+                else if(user.role==='teacher'){
+                    this.props.history.push('/admin/exams')
+                } 
+                else {
                     this.props.history.push('/')
                 }
             }

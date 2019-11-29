@@ -160,3 +160,16 @@ export function transformUrl(url) {
     }
     return url
 }
+
+export function getRole(role){
+    if(role==='admin'){
+        return 'Quản trị viên'
+    }
+    else if(role==='user'){
+        return 'Học sinh'
+    }
+    else if(role==='teacher'){
+        return 'Giáo viên'
+    }
+    return ''
+}

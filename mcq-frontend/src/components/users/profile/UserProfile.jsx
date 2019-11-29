@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Button, Checkbox, Form, Grid, Image, Loader, Message, Segment} from 'semantic-ui-react'
 import {SERVER_FILES, SERVER_API} from '../../../config'
 import {withRouter} from 'react-router-dom'
-import {getToken, getUserInfo, userCallWithData} from "../../../utils/ApiUtils";
+import {getToken, getUserInfo, userCallWithData, getRole} from "../../../utils/ApiUtils";
 import SimpleAppBar from "../exam/list/SimpleAppBar";
 
 const bodyStyle = {
@@ -129,7 +129,7 @@ class UserProfile extends Component {
                                 <Segment>
                                     <Image centered src={`${SERVER_FILES}/profile.png`}/>
                                     <div style={{textAlign: 'center'}}>
-                                        <b>{'Vai trò: '}</b>{role === 'admin' ? 'Người quản trị' : 'Người dùng'}
+                                        <b>{'Vai trò: '}</b>{getRole(role)}
                                     </div>
                                 </Segment>
                             </Grid.Column>
