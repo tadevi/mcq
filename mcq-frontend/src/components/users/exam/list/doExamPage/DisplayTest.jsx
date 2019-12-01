@@ -57,6 +57,7 @@ const RenderAnswerBoard = ({questionPerRows, totalQuestion, onChange, initValue}
     )
 }
 
+const batchAnswerSend = 5
 
 class DisplayTest extends React.Component {
     constructor(props) {
@@ -67,7 +68,8 @@ class DisplayTest extends React.Component {
             openResult: false,
             confirmModal: false,
             width: 0,
-            height: 0
+            height: 0,
+            questionCount: 0
         }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
@@ -164,9 +166,18 @@ class DisplayTest extends React.Component {
     handleAnswerChange(index, answer) {
         const arr = [...this.state.answers]
         arr[index] = answer
+
         this.setState({
-            answers: arr
-        }, () => this.putAnswers())
+            answers: arr,
+            questionCount: this.state.questionCount + 1
+        }, () => {
+            if (this.state.questionCount === batchAnswerSend) {
+                this.putAnswers()
+                this.setState({
+                    questionCount: 0
+                })
+            }
+        })
     }
 
     getQuestionPerRow() {
