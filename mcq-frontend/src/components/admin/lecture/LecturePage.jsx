@@ -297,6 +297,11 @@ class LecturePage extends React.Component {
     }
 
     setModalStatus(status) {
+        if (status === false) {
+            this.setState({
+                lectureToEdit: {}
+            })
+        }
         this.setState({
             modal: status
         })

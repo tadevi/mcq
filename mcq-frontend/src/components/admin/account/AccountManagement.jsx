@@ -142,7 +142,7 @@ class AccountManagement extends React.Component {
                     <Table.HeaderCell>Tên</Table.HeaderCell>
                     <Table.HeaderCell textAlign={'center'}>Vai trò</Table.HeaderCell>
                     <Table.HeaderCell textAlign={'center'}>Ngày tạo</Table.HeaderCell>
-                    <Table.HeaderCell textAlign={'center'}>Gio con lai</Table.HeaderCell>
+                    <Table.HeaderCell textAlign={'center'}>Giờ còn lại</Table.HeaderCell>
                     <Table.HeaderCell>E-mail</Table.HeaderCell>
                     <Table.HeaderCell>Số điện thoại</Table.HeaderCell>
                     <Table.HeaderCell>Hành động</Table.HeaderCell>
@@ -169,9 +169,6 @@ class AccountManagement extends React.Component {
         if (!active)
             return (
                 <ButtonGroup size={'mini'}>
-                    <Button basic onClick={() => this.editUser(item._id, {active: true})}>
-                        <Icon name={'check'} color={'green'}/>
-                    </Button>
                     <Button basic onClick={() => {
                         this.setState({
                             open: true,
