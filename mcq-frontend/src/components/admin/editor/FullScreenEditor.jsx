@@ -4,6 +4,7 @@ import '../../../App.css'
 import {anonymousCall, userCallWithData} from "../../../utils/ApiUtils";
 import {SERVER_API} from "../../../config";
 import {Button, Loader, Message} from "semantic-ui-react";
+import {Log} from "../../../utils/LogUtil";
 
 class FullScreenEditor extends Component {
     state = {
@@ -53,8 +54,8 @@ class FullScreenEditor extends Component {
                 })
                 window.editor.setData(data)
             },
-            err => console.log(err),
-            err => console.log(err),
+            err => Log(err),
+            err => Log(err),
             () => {
             }
         )
@@ -81,7 +82,7 @@ class FullScreenEditor extends Component {
                         </div>
                     </div>
                 </div>
-                <Loader active={this.state.loading} />
+                <Loader active={this.state.loading}/>
                 <Message
                     error
                     hidden={this.state.error === ''}

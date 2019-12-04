@@ -1,6 +1,7 @@
 import Axios from "axios"
 import {Cookies} from "react-cookie";
 import {DEBUG, SERVER_API} from "../config";
+import {Log} from "./LogUtil";
 
 const cookies = new Cookies()
 
@@ -14,8 +15,7 @@ export function userCall(method, url, onSuccess, onFailed, onError, onFinally) {
         }
     })
         .then(({data: res}) => {
-            if (DEBUG)
-                console.log(`response of ${url}: `, res)
+            Log(`response of ${method} ${url}: `, res)
             if (res.success) {
                 onSuccess(res.data)
             } else {
@@ -36,8 +36,7 @@ export function anonymousCall(method, url, onSuccess, onFailed, onError, onFinal
         url,
     })
         .then(({data: res}) => {
-            if (DEBUG)
-                console.log(`response of ${url}: `, res)
+            Log(`response of ${method} ${url}: `, res)
             if (res.success) {
                 onSuccess(res.data)
             } else {
@@ -53,14 +52,14 @@ export function anonymousCall(method, url, onSuccess, onFailed, onError, onFinal
 }
 
 export function anonymousCallWithData(method, url, data, onSuccess, onFailed, onError, onFinally) {
+    Log('body ',data)
     Axios({
         method,
         url,
         data
     })
         .then(({data: res}) => {
-            if (DEBUG)
-                console.log(`response of ${url}: `, res)
+            Log(`response of ${method} ${url}: `, res)
             if (res.success) {
                 onSuccess(res.data)
             } else {
@@ -85,9 +84,8 @@ export function userCallWithData(method, url, data, onSuccess, onFailed, onError
         data
     })
         .then(({data: res}) => {
-            if (DEBUG)
-                console.log('body data', data)
-            console.log(`response of ${url}: `, res)
+            Log('body data', data)
+            Log(`response of ${method} ${url}: `, res)
             if (res.success) {
                 onSuccess(res.data)
             } else {

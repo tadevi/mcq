@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {createRef} from 'react'
 import {Button, ButtonGroup, Confirm, Icon, Table} from "semantic-ui-react";
 import Moment from "react-moment";
 
@@ -59,7 +59,7 @@ class TableLectures extends React.Component {
     render() {
         return (
             <div>
-                <Table striped size={"small"}>
+                <Table size={"small"} selectable basic>
                     {this.renderHeader()}
                     <Table.Body>
                         {this.renderTableContent()}
@@ -89,7 +89,7 @@ class TableLectures extends React.Component {
                     <Table.HeaderCell>Môn</Table.HeaderCell>
                     <Table.HeaderCell>Chủ đề</Table.HeaderCell>
                     <Table.HeaderCell>Tên bài giảng</Table.HeaderCell>
-                    <Table.HeaderCell>Link bài giảng</Table.HeaderCell>
+                    <Table.HeaderCell>Mật khẩu</Table.HeaderCell>
                     <Table.HeaderCell>Ngày tạo</Table.HeaderCell>
                     <Table.HeaderCell>Hành động</Table.HeaderCell>
                 </Table.Row>
@@ -101,21 +101,28 @@ class TableLectures extends React.Component {
         const lectureData = this.state.lectures.data || []
         return lectureData.length > 0 ? lectureData.map(item => {
             return (
-                <Table.Row key={item._id}>
+                <Table.Row key={item._id} style={{cursor: 'pointer'}}
+                           onClick={() => window.open(item.lectureUrl, '_blank')}>
                     <Table.Cell>{item.className}</Table.Cell>
                     <Table.Cell>{item.subjectName}</Table.Cell>
                     <Table.Cell>{item.contentName}</Table.Cell>
                     <Table.Cell>{item.name}</Table.Cell>
-                    <Table.Cell>{item.lectureUrl}</Table.Cell>
+                    <Table.Cell>{item.password ? 'Có' : 'Không'}</Table.Cell>
                     <Table.Cell><Moment format="DD/MM/YYYY HH:mm">
                         {item.datetime}
                     </Moment></Table.Cell>
                     <Table.Cell>
                         <ButtonGroup>
-                            <Button basic onClick={() => this.onEditClick(item._id)}>
+                            <Button basic onClick={(e) => {
+                                e.stopPropagation();
+                                this.onEditClick(item._id)
+                            }}>
                                 <Icon name='edit' color='orange'/>
                             </Button>
-                            <Button basic onClick={() => this.onDeleteClick(item._id)}>
+                            <Button basic onClick={(e) => {
+                                e.stopPropagation();
+                                this.onDeleteClick(item._id)
+                            }}>
                                 <Icon name='delete' color='red'/>
                             </Button>
                         </ButtonGroup>

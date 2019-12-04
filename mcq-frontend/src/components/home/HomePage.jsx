@@ -5,6 +5,7 @@ import AppBar from './AppBar'
 import {SERVER_API} from "../../config";
 import {anonymousCall} from "../../utils/ApiUtils";
 import '../../App.css'
+import {Log} from "../../utils/LogUtil";
 
 class HomePage extends Component {
     state = {
@@ -23,8 +24,8 @@ class HomePage extends Component {
             data => this.setState({
                 homepage: data
             }),
-            err => console.log(err),
-            err => console.log(err),
+            err => Log(err),
+            err => Log(err),
             () => {
             }
         )

@@ -6,6 +6,7 @@ import {SERVER_API} from '../../../config';
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-decoupled-document'
 import {anonymousCall, userCallWithData} from "../../../utils/ApiUtils";
+import {Log} from "../../../utils/LogUtil";
 
 class Editor extends Component {
     state = {
@@ -26,8 +27,8 @@ class Editor extends Component {
             data => this.setState({
                 homepage: data
             }),
-            err => console.log(err),
-            err => console.log(err),
+            err => Log(err),
+            err => Log(err),
             () => {
             }
         )

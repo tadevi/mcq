@@ -4,6 +4,7 @@ import {Link, withRouter} from 'react-router-dom'
 import {getToken, getUserInfo, removeToken, setToken} from "../../../../utils/ApiUtils";
 import {APP_NAME, SERVER_FILES} from "../../../../config";
 import './exam.css'
+
 /** This file has been checked!
  *
  */
@@ -130,7 +131,7 @@ class SimpleAppBar extends React.Component {
     render() {
         const {fixed, header} = this.props
         return (
-            <Menu color='blue' fixed={fixed || false} inverted borderless size={'mini'} stackable>
+            <Menu color='blue' fixed={fixed ? 'top' : undefined} inverted borderless size={'mini'} stackable>
                 <Menu.Item position='left' style={{paddingRight: '50px'}} header as={Link} to={'/'}>
                     <Image size='mini' src={`${SERVER_FILES}/logo.png`} style={{marginRight: '1.5em'}}/>
                     <span style={{fontSize: '12pt'}}>{APP_NAME}</span>

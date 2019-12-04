@@ -5,12 +5,13 @@ import {Dimmer, Form, Grid, Loader} from "semantic-ui-react";
 class LectureEditor extends React.Component {
     constructor(props) {
         super(props)
-        const {name = '', lectureUrl} = props.initData
+        const {name = '', lectureUrl, password} = props.initData
         this.state = {
             name,
             lectureUrl,
             error: '',
             success: '',
+            password: password || '',
             loading: false
         }
         this.handleChange = this.handleChange.bind(this)
@@ -53,28 +54,44 @@ class LectureEditor extends React.Component {
     }
 
     render() {
-        const {name, lectureUrl, loading} = this.state
+        const {name, lectureUrl, loading, password} = this.state
         return (
             <div>
                 <Grid centered>
                     <Grid.Row columns={1}>
                         <Grid.Column width={12}>
-                            <Form.Input
-                                fluid
-                                label="Tên bài giảng"
-                                name="name"
-                                value={name || ''}
-                                onChange={this.handleChange}
-                                type='text'
-                            />
-                            <Form.Input
-                                fluid
-                                label="Link bài giảng"
-                                name="lectureUrl"
-                                value={lectureUrl || ''}
-                                onChange={this.handleChange}
-                                type={'text'}
-                            />
+                            <Form>
+                                <Form.Field>
+                                    <label>Tên bài giảng</label>
+                                    <Form.Input
+                                        fluid
+                                        name="name"
+                                        value={name || ''}
+                                        onChange={this.handleChange}
+                                        type='text'
+                                    />
+                                </Form.Field>
+                                <Form.Field>
+                                    <label>Link bài giảng</label>
+                                    <Form.Input
+                                        fluid
+                                        name="lectureUrl"
+                                        value={lectureUrl || ''}
+                                        onChange={this.handleChange}
+                                        type={'text'}
+                                    />
+                                </Form.Field>
+                                <Form.Field>
+                                    <label>Mật khẩu</label>
+                                    <Form.Input
+                                        fluid
+                                        name="password"
+                                        value={password || ''}
+                                        onChange={this.handleChange}
+                                        type={'text'}
+                                    />
+                                </Form.Field>
+                            </Form>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

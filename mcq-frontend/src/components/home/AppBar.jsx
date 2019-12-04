@@ -118,8 +118,8 @@ class AppBar extends React.Component {
                     return 0
                 })
             }),
-            err => console.log(err),
-            err => console.log(err),
+            err => Log(err),
+            err => Log(err),
             () => {
             }
         )

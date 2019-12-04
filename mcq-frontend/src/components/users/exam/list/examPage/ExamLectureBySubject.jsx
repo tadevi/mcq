@@ -89,8 +89,8 @@ class ExamLectureBySubject extends React.Component {
             {
                 contents.map((item, index) => {
                     return (
-                        <Accordion fluid>
-                            <div key={item._id}>
+                        <Accordion fluid key={item._id}>
+                            <div >
                                 <Accordion.Title
                                     active={activeIndex === index}
                                     index={index}

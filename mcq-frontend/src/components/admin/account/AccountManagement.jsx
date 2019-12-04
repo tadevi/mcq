@@ -1,5 +1,5 @@
 import React from "react";
-import {getToken, parseBlob, userCall, userCallWithData} from "../../../utils/ApiUtils";
+import {getRole, getToken, parseBlob, userCall, userCallWithData} from "../../../utils/ApiUtils";
 import {SERVER_API} from "../../../config";
 import {
     Button,
@@ -8,7 +8,7 @@ import {
     Confirm,
     Icon,
     Loader,
-    Message,
+    Message, Modal,
     Pagination,
     Select,
     Table
@@ -16,6 +16,7 @@ import {
 import Moment from "react-moment";
 import Axios from "axios";
 import fileDownload from "js-file-download";
+import UserEditor from "./components/UserEditor";
 
 const initialState = {
     error: '',
@@ -24,25 +25,12 @@ const initialState = {
     active: true,
     data: [],
     edit: '',
-    open: false
+    open: false,
+    editModal: false,
+    userSelect: null,
+    editData: {}
 }
-const options = [
-    {
-        key: 'user',
-        value: 'user',
-        text: 'Học sinh'
-    },
-    {
-        key: 'teacher',
-        value: 'teacher',
-        text: 'Giáo viên'
-    },
-    {
-        key: 'admin',
-        value: 'admin',
-        text: 'Quản trị viên'
-    }
-]
+
 
 class AccountManagement extends React.Component {
     state = {
@@ -117,34 +105,14 @@ class AccountManagement extends React.Component {
 
     }
 
-    acceptAccount(id) {
+    editUser(id, data) {
         this.setLoading(true)
         userCallWithData(
             'PUT',
             `${SERVER_API}/users/${id}`,
-            {
-                active: true
-            },
+            data,
             data => {
-                this.fetchPage(this.state.data.page)
-                this.setSuccessForWhile('Phê duyệt tài khoản thành công!')
-            },
-            err => this.setErrorForWhile(err),
-            err => this.setErrorForWhile(err),
-            () => this.setLoading(false)
-        )
-    }
-
-    changeRoleUser(id, role) {
-        this.setLoading(true)
-        userCallWithData(
-            'PUT',
-            `${SERVER_API}/users/${id}`,
-            {
-                role
-            },
-            data => {
-                this.fetchPage(this.state.data.page)
+                this.fetchPage(this.state.page)
             },
             err => this.setErrorForWhile(err),
             err => this.setErrorForWhile(err),
@@ -172,8 +140,9 @@ class AccountManagement extends React.Component {
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell>Tên</Table.HeaderCell>
-                    <Table.HeaderCell style={{textAlign: 'center'}}>Vai trò</Table.HeaderCell>
-                    <Table.HeaderCell>Ngày tạo</Table.HeaderCell>
+                    <Table.HeaderCell textAlign={'center'}>Vai trò</Table.HeaderCell>
+                    <Table.HeaderCell textAlign={'center'}>Ngày tạo</Table.HeaderCell>
+                    <Table.HeaderCell textAlign={'center'}>Gio con lai</Table.HeaderCell>
                     <Table.HeaderCell>E-mail</Table.HeaderCell>
                     <Table.HeaderCell>Số điện thoại</Table.HeaderCell>
                     <Table.HeaderCell>Hành động</Table.HeaderCell>
@@ -200,7 +169,7 @@ class AccountManagement extends React.Component {
         if (!active)
             return (
                 <ButtonGroup size={'mini'}>
-                    <Button basic onClick={() => this.acceptAccount(item._id)}>
+                    <Button basic onClick={() => this.editUser(item._id, {active: true})}>
                         <Icon name={'check'} color={'green'}/>
                     </Button>
                     <Button basic onClick={() => {
@@ -211,6 +180,12 @@ class AccountManagement extends React.Component {
                     }}
                     >
                         <Icon name={'delete'} color={'red'}/>
+                    </Button>
+                    <Button basic onClick={() => this.setState({
+                        editModal: true,
+                        userSelect: item
+                    })}>
+                        <Icon name={'pencil'} color={'orange'}/>
                     </Button>
                 </ButtonGroup>
             )
@@ -226,6 +201,12 @@ class AccountManagement extends React.Component {
                         onClick={() => this.exportUserData(item._id, item.email)}>
                     <Icon color={'green'} name={'download'}/>
                 </Button>
+                <Button basic onClick={() => this.setState({
+                    editModal: true,
+                    userSelect: item
+                })}>
+                    <Icon name={'pencil'} color={'orange'}/>
+                </Button>
             </ButtonGroup>
         )
     }
@@ -236,40 +217,16 @@ class AccountManagement extends React.Component {
             return (
                 <Table.Row key={item._id}>
                     <Table.Cell>{item.name}</Table.Cell>
-                    <Table.Cell style={{textAlign: 'center'}}>
-                        <div>
-                            {
-                                this.state.edit === item._id ?
-                                    <Select options={options}
-                                            defaultValue={options.filter(it => it.value === item.role)[0].value}
-                                            onChange={(e, {value}) => this.changeRoleUser(item._id, value)}
-                                    />
-                                    : options.filter(it => it.value === item.role)[0].text
-                            }
-                            <Icon name={'pencil'}
-                                  color={'orange'}
-                                  style={{float: 'right', cursor: 'pointer'}}
-                                  disabled={!this.state.active}
-                                  onClick={() => {
-                                      if (this.state.edit !== item._id) {
-                                          this.setState({
-                                              edit: item._id
-                                          })
-                                      } else {
-                                          if (this.state.edit) {
-                                              this.setState({
-                                                  edit: this.state.edit === '' ? item._id : ''
-                                              })
-                                          }
-                                      }
-                                  }}
-                            />
-                        </div>
+                    <Table.Cell textAlign={'center'}>
+                        {getRole(item.role)}
                     </Table.Cell>
-                    <Table.Cell>
+                    <Table.Cell textAlign={'center'}>
                         <Moment format="DD/MM/YYYY HH:mm">
                             {item.datetime}
                         </Moment>
+                    </Table.Cell>
+                    <Table.Cell textAlign={'center'}>
+                        {Math.round(item.remain * 10 / 60) / 10}
                     </Table.Cell>
                     <Table.Cell>{item.email}</Table.Cell>
                     <Table.Cell>{item.phone}</Table.Cell>
@@ -417,6 +374,33 @@ class AccountManagement extends React.Component {
                         })
                     }}
                 />
+                <Modal open={this.state.editModal} onClose={() => this.setState({editModal: false})}>
+                    <Modal.Header>
+                        Thay doi thong tin
+                    </Modal.Header>
+                    <Modal.Content>
+                        <UserEditor defaultActive={this.state.userSelect ? this.state.userSelect.active : false}
+                                    defaultRemain={this.state.userSelect ? this.state.userSelect.remain : 300 * 60}
+                                    defaultRole={this.state.userSelect ? this.state.userSelect.role : 'user'}
+                                    onChange={editData => this.setState({editData})}/>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button color='red' onClick={() => this.setState({editModal: false})}>
+                            <Icon name='remove'/> Thoát
+                        </Button>
+                        <Button color='green' onClick={() => {
+                            if (this.state.userSelect)
+                                this.editUser(this.state.userSelect._id, this.state.editData)
+                            this.setState({
+                                editModal: false,
+                                userSelect: null
+                            })
+                        }
+                        }>
+                            <Icon name='checkmark'/> Chấp nhận
+                        </Button>
+                    </Modal.Actions>
+                </Modal>
             </div>
         )
     }
