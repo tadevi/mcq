@@ -1,5 +1,5 @@
 import React from 'react'
-import {anonymousCall, anonymousCallWithData} from "../../../../../utils/ApiUtils";
+import {anonymousCall, anonymousCallWithData, userCallWithData} from "../../../../../utils/ApiUtils";
 import {SERVER_FILES, SERVER_API} from "../../../../../config";
 import {Button, Form, Icon, Image, Loader, Message, Modal, Table} from "semantic-ui-react";
 import _ from 'lodash'
@@ -39,7 +39,7 @@ class DisplayExamList extends React.Component {
 
     getLecture(id, password) {
         this.setLoading(true)
-        anonymousCallWithData(
+        userCallWithData(
             'POST',
             `${SERVER_API}/lectures/${id}`,
             {
