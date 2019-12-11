@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Confirm, Container, Embed, Grid, Image, Loader, Menu} from 'semantic-ui-react'
+import {Button, Confirm, Container, Embed, Grid, Image, Loader, Menu, Popup} from 'semantic-ui-react'
 import '../../../../../App.css'
 import moment from "moment";
 
@@ -118,6 +118,15 @@ class DisplayTest extends React.Component {
         )
     }
 
+    getAnswerCount() {
+        let count = 0
+        for (let i = 0; i < this.state.exam.total; ++i) {
+            if (this.state.answers[i] !== ' ')
+                count++
+        }
+        return count
+    }
+
     componentDidMount() {
         this.updateWindowDimensions()
         window.addEventListener('resize', this.updateWindowDimensions)
@@ -193,7 +202,7 @@ class DisplayTest extends React.Component {
     }
 
     render() {
-        const {exam, answer} = this.state
+        const {exam} = this.state
         const {remain, loading, answers} = this.state
         if (_.isEmpty(exam)) {
             return <Loader active/>
@@ -224,31 +233,40 @@ class DisplayTest extends React.Component {
                                 loading={loading}
                                 color='orange'
                                 onClick={() => this.setState({confirmModal: true})}
-                                style={{marginRight: '5px'}}>
+                                style={{marginRight: '5px'}}
+                                disabled={this.getAnswerCount() !== exam.total}
+                            >
                                 NỘP BÀI
                             </Button>
+
                         </Menu.Item>
                     </Container>
                 </Menu>
                 <Container>
-                    <Grid centered columns={2}>
-                        <Grid.Column width={12}>
-                            <Embed
-                                url={transformUrl(exam.examUrl)}
-                                active
-                                style={{
-                                    minHeight: '80vh',
-                                    width: '100%'
-                                }}
-                            />
-                        </Grid.Column>
-                        <Grid.Column width={4}>
-                            <RenderAnswerBoard
-                                initValue={answers}
-                                totalQuestion={exam.total}
-                                questionPerRows={this.getQuestionPerRow()}
-                                onChange={this.handleAnswerChange.bind(this)}/>
-                        </Grid.Column>
+                    <Grid centered>
+                        <Grid.Row>
+                            <b style={{fontSize: '12pt'}}>Trả lời tất cả câu hỏi để nộp bài.</b>
+                        </Grid.Row>
+                        <Grid.Row columns={2}>
+                            <Grid.Column width={12}>
+                                <Embed
+                                    url={transformUrl(exam.examUrl)}
+                                    active
+                                    style={{
+                                        minHeight: '80vh',
+                                        width: '100%'
+                                    }}
+                                />
+                            </Grid.Column>
+                            <Grid.Column width={4}>
+                                <RenderAnswerBoard
+                                    initValue={answers}
+                                    totalQuestion={exam.total}
+                                    questionPerRows={this.getQuestionPerRow()}
+                                    onChange={this.handleAnswerChange.bind(this)}/>
+                            </Grid.Column>
+                        </Grid.Row>
+
                     </Grid>
                 </Container>
                 <Confirm

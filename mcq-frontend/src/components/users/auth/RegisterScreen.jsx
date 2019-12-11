@@ -1,8 +1,17 @@
 import React from 'react'
-import {Button, Form, Grid, Header, Image, Message, Segment} from 'semantic-ui-react'
+import {Button, Form, Grid, Header, Image, Loader, Message, Segment} from 'semantic-ui-react'
 import validator from 'validator'
 import {SERVER_API} from '../../../config'
 import {anonymousCallWithData} from "../../../utils/ApiUtils";
+import {withRouter} from 'react-router-dom'
+
+
+const heightStyle = {
+    height: '80vh'
+}
+const widthStyle = {
+    maxWidth: 450
+}
 
 class RegisterScreen extends React.Component {
     state = {
@@ -13,7 +22,8 @@ class RegisterScreen extends React.Component {
         phone: '',
         formError: '',
         formSuccess: false,
-        loading: false
+        loading: false,
+        redirectLoading: false
     }
 
     constructor(props) {
@@ -42,14 +52,36 @@ class RegisterScreen extends React.Component {
                 password,
                 phone
             },
-            data => this.setState({formSuccess: true}),
-            err => this.setState({formError: err}),
-            err => this.setState({formError: err}),
+            data => {
+                this.setState({
+                        formSuccess: true
+                    },
+                    () => {
+                        this.setState({
+                            redirectLoading: true
+                        })
+                        this.timeout = setTimeout(() => {
+                            const {history} = this.props
+                            history.push('/')
+                        }, 2000)
+                    })
+            },
+            err => this.setState({
+                formError: err
+            }),
+            err => this.setState({
+                formError: err
+            })
+            ,
             () =>
                 this.setState({
                     loading: false
                 })
         )
+    }
+
+    componentDidMount() {
+        clearTimeout(this.timeout)
     }
 
     onSubmit() {
@@ -72,85 +104,89 @@ class RegisterScreen extends React.Component {
     }
 
     render() {
+        const {formSuccess, formError, loading, email, password, rePassword, phone, name} = this.state
         return (
-            <Grid textAlign='center' style={{height: '80vh'}} verticalAlign='middle'>
-                <Grid.Column style={{maxWidth: 450}}>
-                    <Header as='h2' color='teal' textAlign='center'>
-                        <Image src='https://www.digicert.com/account/images/login-shield.png'/> Đăng ký tài khoản
-                    </Header>
-                    <Form size='large' error={this.state.formError} loading={this.state.loading}
-                          success={this.state.formSuccess}>
-                        <Segment stacked>
-                            <Message
-                                error
-                                attached
-                                header="Error"
-                                content={this.state.formError}
-                                style={{marginBottom: '10px'}}
-                            />
-                            <Form.Input
-                                required
-                                fluid
-                                icon='user'
-                                iconPosition='left'
-                                placeholder='Email'
-                                name='email'
-                                value={this.state.email}
-                                onChange={this.handleChange}
-                            />
-                            <Form.Input
-                                required
-                                fluid
-                                icon='lock'
-                                iconPosition='left'
-                                placeholder='Mật khẩu'
-                                type='password'
-                                name='password'
-                                value={this.state.password}
-                                onChange={this.handleChange}
-                            />
-                            <Form.Input
-                                required
-                                fluid
-                                icon='lock'
-                                iconPosition='left'
-                                placeholder='Nhập lại mật khẩu'
-                                type='password'
-                                name='rePassword'
-                                value={this.state.rePassword}
-                                onChange={this.handleChange}
-                            />
-                            <Form.Input
-                                fluid
-                                icon='phone'
-                                iconPosition='left'
-                                type='number'
-                                placeholder="Số điện thoại"
-                                name='phone'
-                                value={this.state.phone}
-                                onChange={this.handleChange}
-                            />
-                            <Form.Input
-                                fluid
-                                icon='content'
-                                iconPosition='left'
-                                placeholder='Họ và tên'
-                                name='name'
-                                value={this.state.name}
-                                onChange={this.handleChange}
-                            />
-                            <Message success>
-                                Yêu cầu tạo tài khoản sẽ được gửi đến người quản trị và xác nhận.
-                            </Message>
-                            <Button primary fluid size='large' onClick={this.onSubmit}>
-                                Đăng ký
-                            </Button>
-                        </Segment>
-                    </Form>
-                </Grid.Column>
-            </Grid>
+            <div>
+                <Grid textAlign='center' style={heightStyle} verticalAlign='middle'>
+                    <Grid.Column style={widthStyle}>
+                        <Header as='h2' color='teal' textAlign='center'>
+                            <Image src='https://www.digicert.com/account/images/login-shield.png'/> Đăng ký tài khoản
+                        </Header>
+                        <Form size='large' error={formError} loading={loading}
+                              success={formSuccess}>
+                            <Segment stacked>
+                                <Message
+                                    error
+                                    attached
+                                    header="Error"
+                                    content={this.state.formError}
+                                    style={{marginBottom: '10px'}}
+                                />
+                                <Form.Input
+                                    required
+                                    fluid
+                                    icon='user'
+                                    iconPosition='left'
+                                    placeholder='Email'
+                                    name='email'
+                                    value={email}
+                                    onChange={this.handleChange}
+                                />
+                                <Form.Input
+                                    required
+                                    fluid
+                                    icon='lock'
+                                    iconPosition='left'
+                                    placeholder='Mật khẩu'
+                                    type='password'
+                                    name='password'
+                                    value={password}
+                                    onChange={this.handleChange}
+                                />
+                                <Form.Input
+                                    required
+                                    fluid
+                                    icon='lock'
+                                    iconPosition='left'
+                                    placeholder='Nhập lại mật khẩu'
+                                    type='password'
+                                    name='rePassword'
+                                    value={rePassword}
+                                    onChange={this.handleChange}
+                                />
+                                <Form.Input
+                                    fluid
+                                    icon='phone'
+                                    iconPosition='left'
+                                    type='number'
+                                    placeholder="Số điện thoại"
+                                    name='phone'
+                                    value={phone}
+                                    onChange={this.handleChange}
+                                />
+                                <Form.Input
+                                    fluid
+                                    icon='content'
+                                    iconPosition='left'
+                                    placeholder='Họ và tên'
+                                    name='name'
+                                    value={name}
+                                    onChange={this.handleChange}
+                                />
+                                <Message success>
+                                    Yêu cầu tạo tài khoản sẽ được gửi đến người quản trị và xác nhận.
+                                </Message>
+                                <Button primary fluid size='large' onClick={this.onSubmit}>
+                                    Đăng ký
+                                </Button>
+                            </Segment>
+                        </Form>
+                    </Grid.Column>
+                </Grid>
+                <Loader active={this.state.redirectLoading}/>
+            </div>
         )
     }
 }
 
-export default RegisterScreen
+export default withRouter(RegisterScreen)

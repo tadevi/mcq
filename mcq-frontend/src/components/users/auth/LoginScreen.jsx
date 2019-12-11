@@ -98,20 +98,20 @@ class LoginScreen extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.state.token) {
-            this.props.history.push('/')
+        const {history} = this.props
+        const {token} = this.state
+        if (token) {
+            history.push('/')
         }
         const {user} = this.state
         if (prevState.user !== user) {
             if (user) {
                 if (user.role === 'admin') {
-                    this.props.history.push('/admin/')
-                } 
-                else if(user.role==='teacher'){
-                    this.props.history.push('/admin/exams')
-                } 
-                else {
-                    this.props.history.push('/')
+                    history.push('/admin/')
+                } else if (user.role === 'teacher') {
+                    history.push('/admin/exams')
+                } else {
+                    history.push('/')
                 }
             }
         }
@@ -164,6 +164,9 @@ class LoginScreen extends React.Component {
                             </Button>
                             <div style={{marginTop: '10px'}}>
                                 <a href="/forgot">Quên mật khẩu?</a>
+                            </div>
+                            <div style={{marginTop: '10px'}}>
+                                <a href={"/register"}>Chưa có tài khoản, đăng ký ngay!</a>
                             </div>
                         </Segment>
                     </Form>
