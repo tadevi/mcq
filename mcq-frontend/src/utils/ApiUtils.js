@@ -156,6 +156,9 @@ export function transformUrl(url) {
         const param = new URLSearchParams(url.substr(url.indexOf('?')))
         return `https://www.youtube.com/embed/${param.get('v')}`
     }
+    else if(url.indexOf('youtu.be')>=0){
+        return url.replace('youtu.be','www.youtube.com/embed')
+    }
     return url
 }
 
