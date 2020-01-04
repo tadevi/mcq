@@ -96,11 +96,11 @@ class ExamPage extends Component {
         this.getExam(1)
     }
 
-    getExam(pageNumber) {
+    getExam(pageNumber = 1, sorting = '') {
         this.setLoading(true)
-        let url = `${SERVER_API}/exams?page=${pageNumber}`
+        let url = `${SERVER_API}/exams?page=${pageNumber}${sorting}`
         if (this.state.contentId)
-            url = `${SERVER_API}/exams/contents/${this.state.contentId}?page=${pageNumber}`
+            url = `${SERVER_API}/exams/contents/${this.state.contentId}?page=${pageNumber}${sorting}`
         userCall(
             'GET',
             url,
@@ -249,6 +249,12 @@ class ExamPage extends Component {
         return <div/>
     }
 
+    handleOnSortChange(data) {
+        const {sortColumn, sortDirection} = data
+        const sort = `&sort=${sortDirection === 'ascending' ? '+' : '-'}${sortColumn}`
+        this.getExam(1, sort)
+    }
+
     render() {
         const {error, success} = this.state
         return (
@@ -270,6 +276,7 @@ class ExamPage extends Component {
                         <Grid.Column width={16}>
                             <TableExam
                                 data={this.state.exams}
+                                onSortChange={data => this.handleOnSortChange(data)}
                                 onEdit={id => this.onExamEdit(id)}
                                 onDelete={id => this.onExamDelete(id)}
                                 onError={err => this.setError(err)}

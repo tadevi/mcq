@@ -65,11 +65,11 @@ class LecturePage extends React.Component {
         )
     }
 
-    getLectures(page) {
+    getLectures(page, sort = '') {
         this.setLoading(true)
-        let url = `${SERVER_API}/lectures?page=${page}`
+        let url = `${SERVER_API}/lectures?page=${page}${sort}`
         if (this.state.contentId)
-            url = `${SERVER_API}/lectures/contents/${this.state.contentId}?page=${page}`
+            url = `${SERVER_API}/lectures/contents/${this.state.contentId}?page=${page}${sort}`
         userCall(
             'GET',
             url,
@@ -159,6 +159,12 @@ class LecturePage extends React.Component {
         return <div/>
     }
 
+    handleSortChange(data) {
+        const {sortColumn, sortDirection} = data
+        const sort = `&sort=${sortDirection === 'ascending' ? '+' : '-'}${sortColumn}`
+        this.getLectures(1, sort)
+    }
+
     render() {
         const {error, success} = this.state
         return (
@@ -181,7 +187,9 @@ class LecturePage extends React.Component {
                             <TableLectures
                                 data={this.state.lectures}
                                 onEdit={id => this.onLectureEdit(id)}
-                                onDelete={id => this.onLectureDelete(id)}/>
+                                onDelete={id => this.onLectureDelete(id)}
+                                onSortChange={data => this.handleSortChange(data)}
+                            />
                             <Loader active={this.state.loading}/>
                         </Grid.Column>
                     </Grid.Row>

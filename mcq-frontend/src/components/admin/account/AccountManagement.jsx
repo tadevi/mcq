@@ -1,6 +1,7 @@
 import React from "react";
 import {getRole, getToken, parseBlob, userCall, userCallWithData} from "../../../utils/ApiUtils";
 import {SERVER_API} from "../../../config";
+import './account.css'
 import {
     Button,
     ButtonGroup,
@@ -10,7 +11,6 @@ import {
     Loader,
     Message, Modal,
     Pagination,
-    Select,
     Table
 } from "semantic-ui-react";
 import Moment from "react-moment";
@@ -28,7 +28,9 @@ const initialState = {
     open: false,
     editModal: false,
     userSelect: null,
-    editData: {}
+    editData: {},
+    sortColumn: '',
+    sortDirection: 'ascending'
 }
 
 
@@ -72,11 +74,11 @@ class AccountManagement extends React.Component {
         })
     }
 
-    fetchPage(page = 1) {
+    fetchPage(page = 1, sort = '') {
         this.setLoading(true)
         userCall(
             'GET',
-            `${SERVER_API}/users?page=${page}&active=${this.state.active}`,
+            `${SERVER_API}/users?page=${page}&active=${this.state.active}${sort}`,
             data => this.setState({...data}),
             err => this.setError(err),
             err => this.setError(err),
@@ -136,16 +138,67 @@ class AccountManagement extends React.Component {
     }
 
     renderHeaderTable() {
+        const handleSortClick = name => {
+            let direction = this.state.sortDirection
+            if (name === this.state.sortColumn) {
+                if (direction === 'ascending')
+                    direction = 'descending'
+                else direction = 'ascending'
+            }
+            this.setState({
+                sortColumn: name,
+                sortDirection: direction
+            })
+            const sorting = `&sort=${direction === 'ascending' ? '+' : '-'}${name}`
+            this.fetchPage(1, sorting)
+
+        }
+        const sortLabel = name => this.state.sortColumn === name ? this.state.sortDirection : null
         return (
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell>Tên</Table.HeaderCell>
-                    <Table.HeaderCell textAlign={'center'}>Vai trò</Table.HeaderCell>
-                    <Table.HeaderCell textAlign={'center'}>Ngày tạo</Table.HeaderCell>
-                    <Table.HeaderCell textAlign={'center'}>Giờ còn lại</Table.HeaderCell>
-                    <Table.HeaderCell>E-mail</Table.HeaderCell>
-                    <Table.HeaderCell>Số điện thoại</Table.HeaderCell>
-                    <Table.HeaderCell>Hành động</Table.HeaderCell>
+                    <Table.HeaderCell
+                        textAlign={'center'}
+                        sorted={sortLabel('name')}
+                        onClick={() => handleSortClick('name')}
+                    >
+                        Tên
+                    </Table.HeaderCell>
+                    <Table.HeaderCell textAlign={'center'}
+                                      sorted={sortLabel('role')}
+                                      onClick={() => handleSortClick('role')}
+                    >
+                        Vai trò
+                    </Table.HeaderCell>
+                    <Table.HeaderCell textAlign={'center'}
+                                      sorted={sortLabel('datetime')}
+                                      onClick={() => handleSortClick('datetime')}
+                    >
+                        Ngày tạo
+                    </Table.HeaderCell>
+                    <Table.HeaderCell textAlign={'center'}
+                                      sorted={sortLabel('remain')}
+                                      onClick={() => handleSortClick('remain')}
+                    >
+                        Giờ còn lại
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                        textAlign={'center'}
+                        sorted={sortLabel('email')}
+                        onClick={() => handleSortClick('email')}
+                    >
+                        E-mail
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                        textAlign={'center'}
+                    >
+                        Số điện thoại
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                        textAlign={'center'}
+                    >
+                        Hành động
+                    </Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
         )
@@ -343,7 +396,7 @@ class AccountManagement extends React.Component {
                         onClick={() => this.exportData()}
                     />
                 </div>
-                <Table striped basic={'very'}>
+                <Table striped basic={'very'} sortable={true} singleLine={true}>
                     {this.renderHeaderTable()}
                     <Table.Body>
                         {this.renderContentTable()}

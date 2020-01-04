@@ -8,7 +8,9 @@ class TableLectures extends React.Component {
         this.state = {
             lectures: props.data || {},
             confirm: false,
-            lectureId: null
+            lectureId: null,
+            sortColumn: 'datetime',
+            sortDirection: 'descending'
         }
         this.onDeleteClick = this.onDeleteClick.bind(this)
         this.onEditClick = this.onEditClick.bind(this)
@@ -59,7 +61,7 @@ class TableLectures extends React.Component {
     render() {
         return (
             <div>
-                <Table size={"small"} selectable basic>
+                <Table size={"small"} selectable basic sortable={true}>
                     {this.renderHeader()}
                     <Table.Body>
                         {this.renderTableContent()}
@@ -82,15 +84,41 @@ class TableLectures extends React.Component {
     }
 
     renderHeader() {
+        const handleSortClick = name => {
+            const {onSortChange} = this.props
+            let direction = this.state.sortDirection
+            if (name === this.state.sortColumn) {
+                if (direction === 'ascending')
+                    direction = 'descending'
+                else
+                    direction = 'ascending'
+            }
+            this.setState({
+                sortColumn: name,
+                sortDirection: direction
+            })
+
+            if (typeof onSortChange === 'function') {
+                onSortChange({
+                    sortDirection: direction,
+                    sortColumn: name
+                })
+            }
+        }
+        const sortLabel = name => this.state.sortColumn === name ? this.state.sortDirection : null
         return (
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell>Lớp</Table.HeaderCell>
                     <Table.HeaderCell>Môn</Table.HeaderCell>
                     <Table.HeaderCell>Chủ đề</Table.HeaderCell>
-                    <Table.HeaderCell>Tên bài giảng</Table.HeaderCell>
+                    <Table.HeaderCell sorted={sortLabel('name')} onClick={() => handleSortClick('name')}>
+                        Tên bài giảng
+                    </Table.HeaderCell>
+                    <Table.HeaderCell sorted={sortLabel('datetime')} onClick={() => handleSortClick('datetime')}>
+                        Ngày tạo
+                    </Table.HeaderCell>
                     <Table.HeaderCell>Mật khẩu</Table.HeaderCell>
-                    <Table.HeaderCell>Ngày tạo</Table.HeaderCell>
                     <Table.HeaderCell>Hành động</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
@@ -107,10 +135,10 @@ class TableLectures extends React.Component {
                     <Table.Cell>{item.subjectName}</Table.Cell>
                     <Table.Cell>{item.contentName}</Table.Cell>
                     <Table.Cell>{item.name}</Table.Cell>
-                    <Table.Cell>{item.password ? 'Có' : 'Không'}</Table.Cell>
                     <Table.Cell><Moment format="DD/MM/YYYY HH:mm">
                         {item.datetime}
                     </Moment></Table.Cell>
+                    <Table.Cell>{item.password ? 'Có' : 'Không'}</Table.Cell>
                     <Table.Cell>
                         <ButtonGroup>
                             <Button basic onClick={(e) => {

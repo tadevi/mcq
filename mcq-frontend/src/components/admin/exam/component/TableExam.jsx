@@ -13,7 +13,9 @@ class TableExam extends React.Component {
         this.state = {
             exams: props.data || {},
             confirm: false,
-            examId: null
+            examId: null,
+            sortColumn: 'datetime',
+            sortDirection: 'descending'
         }
         this.onDeleteClick = this.onDeleteClick.bind(this)
         this.onEditClick = this.onEditClick.bind(this)
@@ -68,7 +70,7 @@ class TableExam extends React.Component {
     render() {
         return (
             <div>
-                <Table striped basic={'very'}>
+                <Table basic={'very'} sortable={true}>
                     {this.renderHeader()}
                     <Table.Body>
                         {this.renderTableContent()}
@@ -91,16 +93,57 @@ class TableExam extends React.Component {
     }
 
     renderHeader() {
+        const handleSortClick = name => {
+            const {onSortChange} = this.props
+            let direction = this.state.sortDirection
+            if (name === this.state.sortColumn) {
+                if (direction === 'ascending')
+                    direction = 'descending'
+                else
+                    direction = 'ascending'
+            }
+            this.setState({
+                sortColumn: name,
+                sortDirection: direction
+            })
+
+            if (typeof onSortChange === 'function') {
+                onSortChange({
+                    sortDirection: direction,
+                    sortColumn: name
+                })
+            }
+        }
+        const sortLabel = name => this.state.sortColumn === name ? this.state.sortDirection : null
         return (
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell>Lớp</Table.HeaderCell>
-                    <Table.HeaderCell>Môn</Table.HeaderCell>
-                    <Table.HeaderCell>Chủ đề</Table.HeaderCell>
-                    <Table.HeaderCell>Tên đề</Table.HeaderCell>
-                    <Table.HeaderCell>Mật khẩu</Table.HeaderCell>
-                    <Table.HeaderCell>Ngày tạo</Table.HeaderCell>
-                    <Table.HeaderCell style={{textAlign: 'center'}}>Hành động</Table.HeaderCell>
+                    <Table.HeaderCell
+                        width={2}>
+                        Lớp
+                    </Table.HeaderCell>
+                    <Table.HeaderCell width={2}>
+                        Môn
+                    </Table.HeaderCell>
+                    <Table.HeaderCell width={2}>
+                        Chủ đề
+                    </Table.HeaderCell>
+                    <Table.HeaderCell width={3}
+                                      sorted={sortLabel('name')}
+                                      onClick={() => handleSortClick('name')}>
+                        Tên đề
+                    </Table.HeaderCell>
+                    <Table.HeaderCell width={3}
+                                      sorted={sortLabel('datetime')}
+                                      onClick={() => handleSortClick('datetime')}>
+                        Ngày tạo
+                    </Table.HeaderCell>
+                    <Table.HeaderCell width={1}>
+                        Mật khẩu
+                    </Table.HeaderCell>
+                    <Table.HeaderCell width={3} style={{textAlign: 'center'}}>
+                        Hành động
+                    </Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
         )
@@ -154,10 +197,10 @@ class TableExam extends React.Component {
                     <Table.Cell>{item.subjectName || ''}</Table.Cell>
                     <Table.Cell>{item.contentName || ''}</Table.Cell>
                     <Table.Cell>{item.name || ''}</Table.Cell>
-                    <Table.Cell>{item.password ? 'Có' : 'Không'}</Table.Cell>
                     <Table.Cell><Moment format="DD/MM/YYYY HH:mm">
                         {item.datetime}
                     </Moment></Table.Cell>
+                    <Table.Cell>{item.password ? 'Có' : 'Không'}</Table.Cell>
                     <Table.Cell style={{textAlign: 'center'}}>
                         <ButtonGroup>
                             <Button basic onClick={() => this.onEditClick(item._id)}>
