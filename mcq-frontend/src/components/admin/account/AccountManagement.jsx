@@ -10,8 +10,9 @@ import {
     Icon,
     Loader,
     Message, Modal,
+    Form,
     Pagination,
-    Table
+    Table, Grid
 } from "semantic-ui-react";
 import Moment from "react-moment";
 import Axios from "axios";
@@ -29,8 +30,9 @@ const initialState = {
     editModal: false,
     userSelect: null,
     editData: {},
-    sortColumn: '',
-    sortDirection: 'ascending'
+    sortColumn: 'datetime',
+    sortDirection: 'ascending',
+    textSearch: ''
 }
 
 
@@ -74,11 +76,14 @@ class AccountManagement extends React.Component {
         })
     }
 
-    fetchPage(page = 1, sort = '') {
+    fetchPage(page = 1, search = '') {
         this.setLoading(true)
+        const searchPart = search ? `&search=${search}` : ''
+        const sortingPart = `&sort=${this.state.sortDirection === 'ascending' ? '+' : '-'}${this.state.sortColumn}`
+        const url = `${SERVER_API}/users?page=${page}&active=${this.state.active}${sortingPart}${searchPart}`
         userCall(
             'GET',
-            `${SERVER_API}/users?page=${page}&active=${this.state.active}${sort}`,
+            encodeURI(url),
             data => this.setState({...data}),
             err => this.setError(err),
             err => this.setError(err),
@@ -148,9 +153,7 @@ class AccountManagement extends React.Component {
             this.setState({
                 sortColumn: name,
                 sortDirection: direction
-            })
-            const sorting = `&sort=${direction === 'ascending' ? '+' : '-'}${name}`
-            this.fetchPage(1, sorting)
+            }, () => this.fetchPage(1))
 
         }
         const sortLabel = name => this.state.sortColumn === name ? this.state.sortDirection : null
@@ -377,26 +380,55 @@ class AccountManagement extends React.Component {
                     hidden={this.state.success === ''}
                 />
                 <div>
+                    {/*<Checkbox*/}
+                    {/*    toggle*/}
+                    {/*    label={'Đã xác nhận'}*/}
+                    {/*    defaultChecked={this.state.active}*/}
+                    {/*    onClick={(e, {checked}) => this.toggleActive(checked)}*/}
+                    {/*/>*/}
+                    {/*<span style={{*/}
+                    {/*    paddingLeft: '10px',*/}
+                    {/*    fontWeight: '500'*/}
+                    {/*}}>{this.state.inActiveCount ? `(${this.state.inActiveCount} tài khoản mới)` : ''}</span>*/}
+                    {/*<Button*/}
+                    {/*    basic*/}
+                    {/*    color={'green'}*/}
+                    {/*    style={{float: 'right'}}*/}
+                    {/*    icon={'download'}*/}
+                    {/*    content={'Lưu dưới dạng Excel'}*/}
+                    {/*    onClick={() => this.exportData()}*/}
+                    {/*/>*/}
+
                     <Checkbox
                         toggle
                         label={'Đã xác nhận'}
                         defaultChecked={this.state.active}
                         onClick={(e, {checked}) => this.toggleActive(checked)}
                     />
-                    <span style={{
-                        paddingLeft: '10px',
-                        fontWeight: '500'
-                    }}>{this.state.inActiveCount ? `(${this.state.inActiveCount} tài khoản mới)` : ''}</span>
                     <Button
                         basic
                         color={'green'}
                         style={{float: 'right'}}
                         icon={'download'}
-                        content={'Lưu dưới dạng Excel'}
+                        content={'Lưu'}
                         onClick={() => this.exportData()}
                     />
+                    <Form.Input
+                        fluid
+                        icon={'search'}
+                        iconPosition={'left'}
+                        style={{marginTop: '30px'}}
+                        placeholder='Tìm kiếm theo tên, email, số điện thoại'
+                        value={this.state.textSearch}
+                        onChange={(e, {value}) => this.setState({textSearch: value})}
+                        onKeyPress={e => {
+                            if (e.key === 'Enter') {
+                                this.fetchPage(1, this.state.textSearch)
+                            }
+                        }}
+                    />
                 </div>
-                <Table striped basic={'very'} sortable={true} singleLine={true}>
+                <Table basic={'very'} sortable={true} singleLine={true}>
                     {this.renderHeaderTable()}
                     <Table.Body>
                         {this.renderContentTable()}
@@ -426,11 +458,11 @@ class AccountManagement extends React.Component {
                 />
                 <Modal open={this.state.editModal} onClose={() => this.setState({editModal: false})}>
                     <Modal.Header>
-                        Thay doi thong tin
+                        Thay đổi thông tin
                     </Modal.Header>
                     <Modal.Content>
                         <UserEditor defaultActive={this.state.userSelect ? this.state.userSelect.active : false}
-                                    defaultRemain={this.state.userSelect ? this.state.userSelect.remain : 300 * 60}
+                                    defaultRemain={this.state.userSelect ? this.state.userSelect.remain : 300}
                                     defaultRole={this.state.userSelect ? this.state.userSelect.role : 'user'}
                                     onChange={editData => this.setState({editData})}/>
                     </Modal.Content>

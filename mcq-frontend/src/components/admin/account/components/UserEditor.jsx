@@ -22,7 +22,7 @@ const options = [
 export default class UserEditor extends React.Component {
     state = {
         active: this.props.defaultActive || false,
-        remain: this.props.defaultRemain || 300 * 60,
+        remain: Math.round(this.props.defaultRemain * 10 / 60) / 10 || 300,
         role: this.props.defaultRole || 'user'
     }
 
@@ -32,7 +32,10 @@ export default class UserEditor extends React.Component {
         }, () => {
             const {onChange} = this.props
             if (typeof onChange === 'function') {
-                onChange(this.state)
+                onChange({
+                    ...this.state,
+                    remain: this.state.remain * 60
+                })
             }
         })
     }
@@ -55,7 +58,7 @@ export default class UserEditor extends React.Component {
                 <Form.Field>
                     <label>Thời gian còn lại (giờ):</label>
                     <Form.Input value={this.state.remain}
-                                onChange={(e, {value}) => this.handleChange('remain', parseInt(value))}
+                                onChange={(e, {value}) => this.handleChange('remain', value)}
                                 type={'number'}
                                 disabled={!this.state.active}
                     />
