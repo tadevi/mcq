@@ -1,10 +1,10 @@
 import React from 'react'
-import {Button, Dropdown, Form, Header, Icon, Modal} from 'semantic-ui-react'
+import {Button, Dropdown, Form, Grid, Header, Icon, Modal} from 'semantic-ui-react'
 
 import {SERVER_API} from '../../../config'
 
 import {userCall, userCallWithData} from "../../../utils/ApiUtils";
-
+import './style.css'
 const initialState = {
     loading: false,
     data: [],
@@ -97,6 +97,11 @@ class ObjectChooser extends React.Component {
             data = {
                 ...data,
                 subjectId: parentId
+            }
+        } else if (name === 'lessons') {
+            data = {
+                ...data,
+                contentId: parentId
             }
         }
         userCallWithData(
@@ -195,7 +200,6 @@ class ObjectChooser extends React.Component {
                 <Modal.Content>
                     <Form.Input
                         label='Tên'
-                        fluid
                         defaultValue={this.state.edit ? this.state.textContent : ''}
                         onChange={(e, {value}) => this.setState({value})}
                     />
@@ -215,7 +219,7 @@ class ObjectChooser extends React.Component {
     renderContentDropdown() {
         return (
             <Dropdown
-                className="selection"
+                className={'ui selection dropdown custom'}
                 text={this.state.textContent}
                 placeholder={this.props.placeholder}
                 disabled={this.state.loading}
@@ -278,14 +282,12 @@ class ObjectChooser extends React.Component {
     }
 
     render() {
-        return (<div>
-                <div style={{display: 'inline'}}>
-                    {this.renderContentDropdown()}
-                    {this.renderActionDropdown()}
-                </div>
+        return (
+            <div style={{display:'inline'}}>
+                {this.renderActionDropdown()}
+                {this.renderContentDropdown()}
                 {this.renderModal()}
             </div>
-
         )
     }
 }

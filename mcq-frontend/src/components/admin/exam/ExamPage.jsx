@@ -23,7 +23,7 @@ class ExamPage extends Component {
         time: 0,
         sortColumn: 'datetime',
         sortDirection: 'ascending',
-        textSearch:''
+        textSearch: ''
     };
 
     constructor(props) {
@@ -33,6 +33,7 @@ class ExamPage extends Component {
         this.onClassItemSelect = this.onClassItemSelect.bind(this)
         this.onSubjectItemSelect = this.onSubjectItemSelect.bind(this)
         this.onContentItemSelect = this.onContentItemSelect.bind(this)
+        this.onLessonItemSelect=this.onLessonItemSelect.bind(this)
         this.setModalStatus = this.setModalStatus.bind(this)
         this.setLoading = this.setLoading.bind(this)
     }
@@ -106,7 +107,7 @@ class ExamPage extends Component {
         const sortPart = `&sort=${sortDirection === 'ascending' ? '+' : '-'}${sortColumn}`
         let url = `${SERVER_API}/exams?page=${pageNumber}${sortPart}${searchPart}`
         if (this.state.contentId)
-            url = `${SERVER_API}/exams/contents/${this.state.contentId}?page=${pageNumber}${sortPart}${searchPart}`
+            url = `${SERVER_API}/exams/lessons/${this.state.lessonId}?page=${pageNumber}${sortPart}${searchPart}`
         userCall(
             'GET',
             encodeURI(url),
@@ -321,20 +322,29 @@ class ExamPage extends Component {
         this.setState({
             classId: value,
             subjectId: '', //reset subject id
-            contentId: '' //reset content id
+            contentId: '', //reset content id,
+            lessonId: ''
         })
     }
 
     onSubjectItemSelect({value}) {
         this.setState({
             subjectId: value,
-            contentId: ''
+            contentId: '',
+            lessonId: ''
         })
     }
 
     onContentItemSelect({value}) {
         this.setState({
-            contentId: value
+            contentId: value,
+            lessonId: ''
+        })
+    }
+
+    onLessonItemSelect({value}) {
+        this.setState({
+            lessonId: value
         }, () => this.getExam(1))
     }
 
@@ -343,6 +353,7 @@ class ExamPage extends Component {
             classId: '',
             contentId: '',
             subjectId: '',
+            lessonId: '',
             reload: this.state.reload + 1,
             error: '',
             success: ''
@@ -351,7 +362,7 @@ class ExamPage extends Component {
 
     renderAddExamSection() {
         return (
-            <Grid.Row columns={4} stretched>
+            <Grid.Row columns={5} stretched>
                 <Grid.Column>
                     <ObjectChooser onError={this.setError}
                                    placeholder='Lớp'
@@ -369,12 +380,19 @@ class ExamPage extends Component {
                 </Grid.Column>
                 <Grid.Column>
                     <ObjectChooser onError={this.setError}
-                                   placeholder='Nội dung'
-                                   name='contents'
+                                   placeholder={'Chương'}
+                                   name={'contents'}
                                    parentId={this.state.subjectId}
+                                   onContentSelect={this.onContentItemSelect}/>
+                </Grid.Column>
+                <Grid.Column>
+                    <ObjectChooser onError={this.setError}
+                                   placeholder='Bài'
+                                   name='lessons'
+                                   parentId={this.state.contentId}
                                    onDelete={() => this.reloadData()}
-                                   onContentSelect={this.onContentItemSelect}
-                    />
+                                   onContentSelect={this.onLessonItemSelect}/>
+
                 </Grid.Column>
                 <Grid.Column>
                     <Button.Group>

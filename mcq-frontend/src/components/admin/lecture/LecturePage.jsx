@@ -236,6 +236,7 @@ class LecturePage extends React.Component {
             classId: '',
             contentId: '',
             subjectId: '',
+            lessonId: '',
             error: '',
             reload: this.state.reload + 1
         }, () => this.getLectures(1))
@@ -243,7 +244,7 @@ class LecturePage extends React.Component {
 
     renderAddLecture() {
         return (
-            <Grid.Row columns={4} stretched>
+            <Grid.Row columns={5} stretched>
                 <Grid.Column>
                     <ObjectChooser onError={this.setError}
                                    placeholder='Lớp'
@@ -260,12 +261,19 @@ class LecturePage extends React.Component {
                 </Grid.Column>
                 <Grid.Column>
                     <ObjectChooser onError={this.setError}
-                                   placeholder='Chủ đề'
-                                   name='contents'
+                                   placeholder={'Chương'}
+                                   name={'contents'}
                                    parentId={this.state.subjectId}
+                                   onContentSelect={this.onContentItemSelect}/>
+                </Grid.Column>
+                <Grid.Column>
+                    <ObjectChooser onError={this.setError}
+                                   placeholder='Bài'
+                                   name='lessons'
+                                   parentId={this.state.contentId}
                                    onDelete={() => this.reloadData()}
-                                   onContentSelect={this.onContentItemSelect}
-                    />
+                                   onContentSelect={this.onLessonItemSelect}/>
+
                 </Grid.Column>
                 <Grid.Column>
                     <Button.Group>
@@ -310,20 +318,29 @@ class LecturePage extends React.Component {
         this.setState({
             classId: value,
             subjectId: '', //reset subject id
-            contentId: '' //reset content id
+            contentId: '', //reset content id,
+            lessonId: ''
         })
     }
 
     onSubjectItemSelect({value}) {
         this.setState({
             subjectId: value,
-            contentId: ''
+            contentId: '',
+            lessonId: ''
         })
     }
 
     onContentItemSelect({value}) {
         this.setState({
-            contentId: value
+            contentId: value,
+            lessonId: ''
+        })
+    }
+
+    onLessonItemSelect({value}) {
+        this.setState({
+            lessonId: value
         }, () => this.getLectures(1))
     }
 
