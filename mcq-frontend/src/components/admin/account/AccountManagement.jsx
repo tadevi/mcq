@@ -78,7 +78,7 @@ class AccountManagement extends React.Component {
 
     fetchPage(page = 1, search = '') {
         this.setLoading(true)
-        const searchPart = search ? `&search=${search}` : ''
+        const searchPart = this.state.textSearch ? `&search=${this.state.textSearch}` : ''
         const sortingPart = `&sort=${this.state.sortDirection === 'ascending' ? '+' : '-'}${this.state.sortColumn}`
         const url = `${SERVER_API}/users?page=${page}&active=${this.state.active}${sortingPart}${searchPart}`
         userCall(
@@ -423,7 +423,7 @@ class AccountManagement extends React.Component {
                         onChange={(e, {value}) => this.setState({textSearch: value})}
                         onKeyPress={e => {
                             if (e.key === 'Enter') {
-                                this.fetchPage(1, this.state.textSearch)
+                                this.fetchPage(1)
                             }
                         }}
                     />

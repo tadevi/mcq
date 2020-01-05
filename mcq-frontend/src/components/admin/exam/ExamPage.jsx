@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Button, Grid, Header, Icon, Loader, Message, Modal, Pagination} from 'semantic-ui-react'
+import {Button, Checkbox, Form, Grid, Header, Icon, Input, Loader, Message, Modal, Pagination} from 'semantic-ui-react'
 import {SERVER_API} from '../../../config'
 import ObjectChooser from '../components/ObjectChooser'
 import TableExam from "./component/TableExam";
@@ -20,7 +20,10 @@ class ExamPage extends Component {
         examToEdit: {},
         success: '',
         reload: 0,
-        time: 0
+        time: 0,
+        sortColumn: 'datetime',
+        sortDirection: 'ascending',
+        textSearch:''
     };
 
     constructor(props) {
@@ -96,14 +99,17 @@ class ExamPage extends Component {
         this.getExam(1)
     }
 
-    getExam(pageNumber = 1, sorting = '') {
+    getExam(pageNumber = 1) {
         this.setLoading(true)
-        let url = `${SERVER_API}/exams?page=${pageNumber}${sorting}`
+        const searchPart = this.state.textSearch ? `&search=${this.state.textSearch}` : ''
+        const {sortColumn, sortDirection} = this.state
+        const sortPart = `&sort=${sortDirection === 'ascending' ? '+' : '-'}${sortColumn}`
+        let url = `${SERVER_API}/exams?page=${pageNumber}${sortPart}${searchPart}`
         if (this.state.contentId)
-            url = `${SERVER_API}/exams/contents/${this.state.contentId}?page=${pageNumber}${sorting}`
+            url = `${SERVER_API}/exams/contents/${this.state.contentId}?page=${pageNumber}${sortPart}${searchPart}`
         userCall(
             'GET',
-            url,
+            encodeURI(url),
             data => this.setState({exams: data}),
             err => this.setError(err),
             err => this.setError(err),
@@ -250,9 +256,9 @@ class ExamPage extends Component {
     }
 
     handleOnSortChange(data) {
-        const {sortColumn, sortDirection} = data
-        const sort = `&sort=${sortDirection === 'ascending' ? '+' : '-'}${sortColumn}`
-        this.getExam(1, sort)
+        this.setState({
+            ...data
+        }, () => this.getExam(1))
     }
 
     render() {
@@ -272,6 +278,25 @@ class ExamPage extends Component {
                 />
                 <Grid divided centered>
                     {this.renderAddExamSection()}
+                    <Grid.Row columns={1}>
+                        <Grid.Column width={16}>
+                            <Input
+                                fluid
+                                icon={'search'}
+                                iconPosition={'left'}
+                                style={{marginTop: '30px'}}
+                                placeholder='Tên đề thi'
+                                value={this.state.textSearch}
+                                onChange={(e, {value}) => this.setState({textSearch: value})}
+                                onKeyPress={e => {
+                                    if (e.key === 'Enter') {
+                                        this.getExam(1)
+                                    }
+                                }}
+                            />
+                        </Grid.Column>
+                    </Grid.Row>
+
                     <Grid.Row columns={1}>
                         <Grid.Column width={16}>
                             <TableExam

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Grid, Header, Icon, Loader, Message, Modal, Pagination} from "semantic-ui-react";
+import {Button, Grid, Header, Icon, Input, Loader, Message, Modal, Pagination} from "semantic-ui-react";
 import TableLectures from "./components/TableLectures";
 import ObjectChooser from "../components/ObjectChooser";
 import LectureEditor from "./components/LectureEditor";
@@ -19,7 +19,10 @@ class LecturePage extends React.Component {
         modal: false,
         editMode: false,
         lectureToEdit: {},
-        reload: 0
+        reload: 0,
+        sortColumn: 'datetime',
+        sortDirection: 'ascending',
+        textSearch: ''
     }
 
     constructor(props) {
@@ -65,11 +68,13 @@ class LecturePage extends React.Component {
         )
     }
 
-    getLectures(page, sort = '') {
+    getLectures(page) {
         this.setLoading(true)
-        let url = `${SERVER_API}/lectures?page=${page}${sort}`
+        const sortPart = `&sort=${this.state.sortDirection === 'ascending' ? '+' : '-'}${this.state.sortColumn}`
+        const searchPart = this.state.textSearch ? `&search=${this.state.textSearch}` : ''
+        let url = `${SERVER_API}/lectures?page=${page}${sortPart}${searchPart}`
         if (this.state.contentId)
-            url = `${SERVER_API}/lectures/contents/${this.state.contentId}?page=${page}${sort}`
+            url = `${SERVER_API}/lectures/contents/${this.state.contentId}?page=${page}${sortPart}${searchPart}`
         userCall(
             'GET',
             url,
@@ -160,9 +165,9 @@ class LecturePage extends React.Component {
     }
 
     handleSortChange(data) {
-        const {sortColumn, sortDirection} = data
-        const sort = `&sort=${sortDirection === 'ascending' ? '+' : '-'}${sortColumn}`
-        this.getLectures(1, sort)
+        this.setState({
+            ...data
+        }, () => this.getLectures(1))
     }
 
     render() {
@@ -182,6 +187,24 @@ class LecturePage extends React.Component {
                 />
                 <Grid divided centered>
                     {this.renderAddLecture()}
+                    <Grid.Row columns={1}>
+                        <Grid.Column width={16}>
+                            <Input
+                                fluid
+                                icon={'search'}
+                                iconPosition={'left'}
+                                style={{marginTop: '30px'}}
+                                placeholder='Tên bài giảng'
+                                value={this.state.textSearch}
+                                onChange={(e, {value}) => this.setState({textSearch: value})}
+                                onKeyPress={e => {
+                                    if (e.key === 'Enter') {
+                                        this.getLectures(1)
+                                    }
+                                }}
+                            />
+                        </Grid.Column>
+                    </Grid.Row>
                     <Grid.Row columns={1}>
                         <Grid.Column width={16}>
                             <TableLectures
