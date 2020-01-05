@@ -31,7 +31,7 @@ const initialState = {
     userSelect: null,
     editData: {},
     sortColumn: 'datetime',
-    sortDirection: 'ascending',
+    sortDirection: 'descending',
     textSearch: ''
 }
 
@@ -405,6 +405,10 @@ class AccountManagement extends React.Component {
                         defaultChecked={this.state.active}
                         onClick={(e, {checked}) => this.toggleActive(checked)}
                     />
+                    <span style={{
+                        paddingLeft: '10px',
+                        fontWeight: '500'
+                    }}>{this.state.inActiveCount ? `(${this.state.inActiveCount} tài khoản mới)` : ''}</span>
                     <Button
                         basic
                         color={'green'}

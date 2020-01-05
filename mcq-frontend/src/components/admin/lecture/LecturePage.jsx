@@ -21,7 +21,7 @@ class LecturePage extends React.Component {
         lectureToEdit: {},
         reload: 0,
         sortColumn: 'datetime',
-        sortDirection: 'ascending',
+        sortDirection: 'descending',
         textSearch: ''
     }
 
