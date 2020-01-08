@@ -31,6 +31,7 @@
   "scripts": {
     "start": "cp dev-config.js src/config.js && react-scripts start",
     "build": "cp pro-config.js src/config.js && react-scripts build",
+    "build-dev":"cp dev-config.js src/config.js && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
