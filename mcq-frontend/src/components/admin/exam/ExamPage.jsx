@@ -22,7 +22,7 @@ class ExamPage extends Component {
         reload: 0,
         time: 0,
         sortColumn: 'datetime',
-        sortDirection: 'ascending',
+        sortDirection: 'descending',
         textSearch: ''
     };
 

@@ -219,7 +219,7 @@ class ObjectChooser extends React.Component {
     renderContentDropdown() {
         return (
             <Dropdown
-                className={'ui selection dropdown custom'}
+                className={'selection'}
                 text={this.state.textContent}
                 placeholder={this.props.placeholder}
                 disabled={this.state.loading}
@@ -246,7 +246,6 @@ class ObjectChooser extends React.Component {
     renderActionDropdown() {
         return (
             <Dropdown
-                className='icon'
                 icon='sidebar'
                 disabled={this.state.loading}>
                 <Dropdown.Menu>
@@ -283,7 +282,7 @@ class ObjectChooser extends React.Component {
 
     render() {
         return (
-            <div style={{display:'inline'}}>
+            <div style={{display:'inline-block'}}>
                 {this.renderActionDropdown()}
                 {this.renderContentDropdown()}
                 {this.renderModal()}

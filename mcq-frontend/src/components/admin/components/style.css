@@ -1,3 +1,6 @@
 .ui.selection.dropdown.custom {
-    display: block;
+    display: block !important;
+}
+.ui.dropdown.icon.custom {
+    display: block !important;
 }
