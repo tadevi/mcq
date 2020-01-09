@@ -1,5 +1,5 @@
 import React from 'react'
-import {anonymousCall} from "../../../../../utils/ApiUtils";
+import {anonymousCall, userCall} from "../../../../../utils/ApiUtils";
 import {SERVER_API} from "../../../../../config";
 import {Accordion, Grid, Icon, Message} from "semantic-ui-react";
 import SimpleAppBar from "../SimpleAppBar";
@@ -62,12 +62,35 @@ class ExamLectureBySubject extends React.Component {
         })
     }
 
+    getLessonByContentId(id) {
+        this.setLoading(true)
+        userCall(
+            'GET',
+            `${SERVER_API}/lessons/${id}`,
+            data => {
+                this.setState({
+                    lessons: {
+                        ...this.state.lessons,
+                        [id]: data
+                    }
+                })
+            },
+            err => this.setError(err),
+            err => this.setError(err),
+            () => this.setLoading(false)
+        )
+    }
 
     getContentBySubjectId(id) {
         anonymousCall(
             'GET',
             `${SERVER_API}/contents/${id}`,
-            data => this.setState({contents: data}),
+            data => {
+                this.setState({
+                    contents: data
+                })
+                data.map((item, index) => this.getLessonByContentId(item._id))
+            },
             err => this.setError(err),
             err => this.setError(err),
             () => {
@@ -90,7 +113,7 @@ class ExamLectureBySubject extends React.Component {
                 contents.map((item, index) => {
                     return (
                         <Accordion fluid key={item._id}>
-                            <div >
+                            <div>
                                 <Accordion.Title
                                     active={activeIndex === index}
                                     index={index}
@@ -116,6 +139,7 @@ class ExamLectureBySubject extends React.Component {
 
     render() {
         const {breadCrumb} = this.state
+        console.log('state', this.state)
         return (
             <div>
                 <SimpleAppBar

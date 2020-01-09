@@ -1,5 +1,5 @@
 import React from 'react'
-import {anonymousCall, anonymousCallWithData, userCallWithData} from "../../../../../utils/ApiUtils";
+import {anonymousCall, anonymousCallWithData, userCall, userCallWithData} from "../../../../../utils/ApiUtils";
 import {SERVER_FILES, SERVER_API} from "../../../../../config";
 import {Button, Form, Icon, Image, Loader, Message, Modal, Table} from "semantic-ui-react";
 import _ from 'lodash'
@@ -17,7 +17,7 @@ class DisplayExamList extends React.Component {
     }
 
     componentDidMount() {
-        this.getExamByContentId(1)
+        this.getExamByContentId()
     }
 
     setError(error) {
@@ -77,6 +77,7 @@ class DisplayExamList extends React.Component {
             () => this.setLoading(false)
         )
     }
+
     componentWillUnmount() {
         clearTimeout(this.timeout)
     }

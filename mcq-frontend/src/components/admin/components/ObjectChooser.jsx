@@ -199,6 +199,7 @@ class ObjectChooser extends React.Component {
                 <Header icon='archive' content={this.state.edit ? "Thay đổi" : "Thêm mới"}/>
                 <Modal.Content>
                     <Form.Input
+                        fluid
                         label='Tên'
                         defaultValue={this.state.edit ? this.state.textContent : ''}
                         onChange={(e, {value}) => this.setState({value})}

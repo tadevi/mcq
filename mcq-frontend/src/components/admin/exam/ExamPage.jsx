@@ -17,7 +17,15 @@ class ExamPage extends Component {
         modal: false,
         contentId: null,
         editMode: false,
-        examToEdit: {},
+        examToEdit: {
+            name: '',
+            examUrl: '',
+            answer: '',
+            explainUrl: '',
+            time: 0,
+            note: '',
+            password: ''
+        },
         success: '',
         reload: 0,
         time: 0,
@@ -33,7 +41,7 @@ class ExamPage extends Component {
         this.onClassItemSelect = this.onClassItemSelect.bind(this)
         this.onSubjectItemSelect = this.onSubjectItemSelect.bind(this)
         this.onContentItemSelect = this.onContentItemSelect.bind(this)
-        this.onLessonItemSelect=this.onLessonItemSelect.bind(this)
+        this.onLessonItemSelect = this.onLessonItemSelect.bind(this)
         this.setModalStatus = this.setModalStatus.bind(this)
         this.setLoading = this.setLoading.bind(this)
     }

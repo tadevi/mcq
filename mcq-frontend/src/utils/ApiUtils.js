@@ -4,7 +4,9 @@ import {DEBUG, SERVER_API} from "../config";
 import {Log} from "./LogUtil";
 
 const cookies = new Cookies()
-
+Axios.defaults.validateStatus = function () {
+    return true
+}
 
 export function userCall(method, url, onSuccess, onFailed, onError, onFinally) {
     Axios({
@@ -23,7 +25,9 @@ export function userCall(method, url, onSuccess, onFailed, onError, onFinally) {
             }
         })
         .catch(err => {
-            onError('Lỗi không xác định!')
+            if (err.response) {
+                onError(err.response.message)
+            } else onError('Lỗi không xác định!')
         })
         .finally(() => {
             onFinally()
@@ -33,7 +37,7 @@ export function userCall(method, url, onSuccess, onFailed, onError, onFinally) {
 export function anonymousCall(method, url, onSuccess, onFailed, onError, onFinally) {
     Axios({
         method,
-        url,
+        url
     })
         .then(({data: res}) => {
             Log(`response of ${method} ${url}: `, res)
@@ -44,7 +48,9 @@ export function anonymousCall(method, url, onSuccess, onFailed, onError, onFinal
             }
         })
         .catch(err => {
-            onError('Lỗi không xác định!')
+            if (err.response) {
+                onError(err.response.message)
+            } else onError('Lỗi không xác định!')
         })
         .finally(() => {
             onFinally()
@@ -52,7 +58,7 @@ export function anonymousCall(method, url, onSuccess, onFailed, onError, onFinal
 }
 
 export function anonymousCallWithData(method, url, data, onSuccess, onFailed, onError, onFinally) {
-    Log('body ',data)
+    Log('body ', data)
     Axios({
         method,
         url,
@@ -67,7 +73,9 @@ export function anonymousCallWithData(method, url, data, onSuccess, onFailed, on
             }
         })
         .catch(err => {
-            onError('Lỗi không xác định!')
+            if (err.response) {
+                onError(err.response.message)
+            } else onError('Lỗi không xác định!')
         })
         .finally(() => {
             onFinally()
@@ -93,7 +101,9 @@ export function userCallWithData(method, url, data, onSuccess, onFailed, onError
             }
         })
         .catch(err => {
-            onError('Lỗi không xác định!')
+            if (err.response) {
+                onError(err.response.message)
+            } else onError('Lỗi không xác định!')
         })
         .finally(() => {
             onFinally()
@@ -120,7 +130,10 @@ export function getUserInfo(onSuccess, onError, onFinish) {
                 }
             })
             .catch(err => {
-                onError(err.message)
+                removeToken()
+                if (err.response) {
+                    onError(err.response.message)
+                } else onError('Lỗi không xác định!')
             })
             .finally(() => {
                 onFinish()
@@ -155,9 +168,8 @@ export function transformUrl(url) {
     } else if (url.indexOf('youtube.com') >= 0) {
         const param = new URLSearchParams(url.substr(url.indexOf('?')))
         return `https://www.youtube.com/embed/${param.get('v')}`
-    }
-    else if(url.indexOf('youtu.be')>=0){
-        return url.replace('youtu.be','www.youtube.com/embed')
+    } else if (url.indexOf('youtu.be') >= 0) {
+        return url.replace('youtu.be', 'www.youtube.com/embed')
     }
     return url
 }

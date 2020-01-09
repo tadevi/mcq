@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, ButtonGroup, Confirm, Icon, Table} from 'semantic-ui-react'
+import {Button, ButtonGroup, Confirm, Dropdown, Icon, Table} from 'semantic-ui-react'
 import Moment from "react-moment";
 import {withRouter} from "react-router-dom";
 import Axios from "axios";
@@ -70,7 +70,7 @@ class TableExam extends React.Component {
     render() {
         return (
             <div>
-                <Table basic={'very'} sortable={true}>
+                <Table sortable={true} basic>
                     {this.renderHeader()}
                     <Table.Body>
                         {this.renderTableContent()}
@@ -118,31 +118,36 @@ class TableExam extends React.Component {
         return (
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell
-                        width={2}>
+                    <Table.HeaderCell textAlign={'center'}>
                         Lớp
                     </Table.HeaderCell>
-                    <Table.HeaderCell width={2}>
+                    <Table.HeaderCell textAlign={'center'}>
                         Môn
                     </Table.HeaderCell>
-                    <Table.HeaderCell width={2}>
-                        Chủ đề
+                    <Table.HeaderCell textAlign={'center'}>
+                        Chương
                     </Table.HeaderCell>
-                    <Table.HeaderCell width={3}
-                                      sorted={sortLabel('name')}
-                                      onClick={() => handleSortClick('name')}>
+                    <Table.HeaderCell textAlign={'center'}
+                    >
+                        Bài
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                        textAlign={'center'}
+                        sorted={sortLabel('name')}
+                        onClick={() => handleSortClick('name')}>
                         Tên đề
                     </Table.HeaderCell>
-                    <Table.HeaderCell width={3}
-                                      sorted={sortLabel('datetime')}
-                                      onClick={() => handleSortClick('datetime')}>
+                    <Table.HeaderCell
+                        textAlign={'center'}
+                        sorted={sortLabel('datetime')}
+                        onClick={() => handleSortClick('datetime')}>
                         Ngày tạo
                     </Table.HeaderCell>
-                    <Table.HeaderCell width={1}>
-                        Mật khẩu
+                    <Table.HeaderCell
+                        textAlign={'center'}>
+                        Người tạo
                     </Table.HeaderCell>
-                    <Table.HeaderCell width={3} style={{textAlign: 'center'}}>
-                        Hành động
+                    <Table.HeaderCell textAlign={'center'}>
                     </Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
@@ -193,29 +198,36 @@ class TableExam extends React.Component {
         return examData.map(item => {
             return (
                 <Table.Row key={item._id}>
-                    <Table.Cell>{item.className || ''}</Table.Cell>
+                    <Table.Cell textAlign={'center'}>{item.className || ''}</Table.Cell>
                     <Table.Cell>{item.subjectName || ''}</Table.Cell>
                     <Table.Cell>{item.contentName || ''}</Table.Cell>
+                    <Table.Cell>{item.lessonName || ''}</Table.Cell>
                     <Table.Cell>{item.name || ''}</Table.Cell>
                     <Table.Cell><Moment format="DD/MM/YYYY HH:mm">
                         {item.datetime}
                     </Moment></Table.Cell>
-                    <Table.Cell>{item.password ? 'Có' : 'Không'}</Table.Cell>
-                    <Table.Cell style={{textAlign: 'center'}}>
-                        <ButtonGroup>
-                            <Button basic onClick={() => this.onEditClick(item._id)}>
-                                <Icon name='edit' color='orange'/>
-                            </Button>
-                            <Button basic onClick={() => this.onDeleteClick(item._id)}>
-                                <Icon name='delete' color='red'/>
-                            </Button>
-                            <Button basic onClick={() => this.props.history.push('/statistics/' + item._id)}>
-                                <Icon name={'pie chart'} color={'green'}/>
-                            </Button>
-                            <Button basic onClick={() => this.exportData(item._id, item.name)}>
-                                <Icon name={'download'} color={'green'}/>
-                            </Button>
-                        </ButtonGroup>
+                    <Table.Cell textAlign={'center'}>{item.userEmail}</Table.Cell>
+                    <Table.Cell textAlign={'center'}>
+                        <Dropdown
+                            icon='sidebar'
+                            disabled={this.state.loading}>
+                            <Dropdown.Menu>
+                                <Dropdown.Item
+                                    icon={<Icon name={'edit'} color={'orange'} /> }
+                                    onClick={() => this.onEditClick(item._id)}
+                                />
+                                <Dropdown.Item
+                                    icon={<Icon name={'delete'} color={'red'} /> }
+                                    onClick={() => this.onDeleteClick(item._id)}
+                                />
+                                <Dropdown.Item
+                                    icon={<Icon name={'pie chart'} color={'green'} /> }
+                                    onClick={() => this.props.history.push('/statistics/' + item._id)}/>
+                                <Dropdown.Item
+                                    icon={<Icon name={'download'} color={'blue'} /> }
+                                    onClick={() => this.exportData(item._id, item.name)}/>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </Table.Cell>
                 </Table.Row>
             )
