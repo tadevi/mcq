@@ -13,6 +13,7 @@ import ExamDid from "./components/users/profile/ExamDid";
 import ForgotPassword from './components/users/auth/ForgotPassword'
 import ExamLectureBySubject from "./components/users/exam/list/examPage/ExamLectureBySubject";
 import DisplayTest from "./components/users/exam/list/doExamPage/DisplayTest";
+import ChapterComponent from "./components/users/exam/list/components/ChapterComponent";
 
 class App extends Component {
 
@@ -45,7 +46,7 @@ class App extends Component {
                         <ExamDetail/>
                     </Route>
                     <Route exact path={"/subject/:id"}>
-                        <ExamLectureBySubject/>
+                        <ChapterComponent/>
                     </Route>
                     <Route exact path={"/result/:id"}>
                         <DisplayResult/>

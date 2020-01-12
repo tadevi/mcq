@@ -17,6 +17,7 @@
     "react-dom": "^16.10.2",
     "react-froala-wysiwyg": "^3.0.6",
     "react-horizontal-scrolling-menu": "^0.7.3",
+    "react-lazyload": "^2.6.5",
     "react-moment": "^0.9.6",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.1.2",
@@ -31,7 +32,7 @@
   "scripts": {
     "start": "cp dev-config.js src/config.js && react-scripts start",
     "build": "cp pro-config.js src/config.js && react-scripts build",
-    "build-dev":"cp dev-config.js src/config.js && react-scripts build",
+    "build-dev": "cp dev-config.js src/config.js && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
