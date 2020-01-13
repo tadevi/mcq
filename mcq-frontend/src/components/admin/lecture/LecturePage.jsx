@@ -73,8 +73,8 @@ class LecturePage extends React.Component {
         const sortPart = `&sort=${this.state.sortDirection === 'ascending' ? '+' : '-'}${this.state.sortColumn}`
         const searchPart = this.state.textSearch ? `&search=${this.state.textSearch}` : ''
         let url = `${SERVER_API}/lectures?page=${page}${sortPart}${searchPart}`
-        if (this.state.contentId)
-            url = `${SERVER_API}/lectures/contents/${this.state.contentId}?page=${page}${sortPart}${searchPart}`
+        if (this.state.lessonId)
+            url = `${SERVER_API}/lectures/lessons/${this.state.lessonId}?page=${page}${sortPart}${searchPart}`
         userCall(
             'GET',
             url,
@@ -272,18 +272,18 @@ class LecturePage extends React.Component {
                                    name='lessons'
                                    parentId={this.state.contentId}
                                    onDelete={() => this.reloadData()}
-                                   onContentSelect={this.onLessonItemSelect}/>
+                                   onContentSelect={this.onLessonItemSelect.bind(this)}/>
 
                 </Grid.Column>
                 <Grid.Column>
-                    <Button.Group>
-                        <Button basic onClick={() => this.reloadData()}>
+                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                        <Button basic onClick={() => this.reloadData()} >
                             <Icon name={'redo'}/>
                         </Button>
                         <Button basic color={"green"} onClick={() => this.setModalStatus(true)}>
-                            <Icon name='plus' color={'green'}/> Thêm bài giảng
+                            <Icon name='plus' color={'green'}/>
                         </Button>
-                    </Button.Group>
+                    </div>
                 </Grid.Column>
             </Grid.Row>
         )
@@ -372,7 +372,7 @@ class LecturePage extends React.Component {
             this.setState({
                 lectureToEdit: {
                     ...this.state.lectureToEdit,
-                    contentId: this.state.contentId
+                    lessonId: this.state.lessonId
                 }
             }, () => this.createLecture())
         }

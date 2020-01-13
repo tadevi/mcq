@@ -220,7 +220,7 @@ class ObjectChooser extends React.Component {
     renderContentDropdown() {
         return (
             <Dropdown
-                className={'selection'}
+                className={'selection single line'}
                 text={this.state.textContent}
                 placeholder={this.props.placeholder}
                 disabled={this.state.loading}

@@ -4,6 +4,22 @@ import {anonymousCall} from "../../../../../utils/ApiUtils";
 import {SERVER_API} from "../../../../../config";
 import {Accordion, Icon} from "semantic-ui-react";
 
+const titleWrapper = {
+    flexDirection: 'row',
+    alignItems: 'center',
+    display: 'flex',
+    flex: '1 1 auto',
+    fontSize: '16px',
+    boxSizing: 'border-box',
+    border: 'solid 1px #e8e9eb',
+    margin: '2px',
+    color: '#007791',
+    backgroundColor: 'transparent',
+    fontWeight: '400',
+    textDecoration: 'none'
+}
+
+
 export default class LessonComponent extends React.Component {
     state = {
         lessons: [],
@@ -56,14 +72,21 @@ export default class LessonComponent extends React.Component {
                         return (
                             <div key={item._id}>
                                 <Accordion.Title
+                                    style={titleWrapper}
                                     active={activeIndex === index}
                                     index={index}
                                     onClick={() => this.handleClick(index)}
                                 >
-                                    <Icon name='dropdown'/> {item.name}
+                                    <p><span style={{
+                                        color: '#007791',
+                                        paddingLeft: '10px',
+                                        paddingRight: '10px'
+                                    }}>{activeIndex === index ? '-' : '+'}</span>{"Bài "+item.name} </p>
                                 </Accordion.Title>
                                 <Accordion.Content active={activeIndex === index}>
+                                    <div style={{marginLeft: '4em'}}>
                                         <ExamLectureComponent lessonId={item._id}/>
+                                    </div>
                                 </Accordion.Content>
                             </div>
                         )

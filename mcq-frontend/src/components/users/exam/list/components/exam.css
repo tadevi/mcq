@@ -1,0 +1,10 @@
+.title-wrapper {
+    flex-direction: row;
+    align-items: center;
+    display: flex;
+    color: #505763;
+    flex: 1 1 auto;
+    font-size: 18px;
+    font-weight: 600;
+    box-sizing: border-box;
+}

@@ -15,9 +15,10 @@ import {
     Table, Grid
 } from "semantic-ui-react";
 import Moment from "react-moment";
-import Axios from "axios";
+import axios from "axios";
 import fileDownload from "js-file-download";
 import UserEditor from "./components/UserEditor";
+import {Log} from "../../../utils/LogUtil";
 
 const initialState = {
     error: '',
@@ -302,7 +303,7 @@ class AccountManagement extends React.Component {
 
     exportData() {
         this.setLoading(true)
-        Axios.get(
+        axios.get(
             `${SERVER_API}/users/export`,
             {
                 headers: {
@@ -327,7 +328,7 @@ class AccountManagement extends React.Component {
 
     exportUserData(id, email) {
         this.setLoading(true)
-        Axios.get(
+        axios.get(
             `${SERVER_API}/exams/users/${id}/export`,
             {
                 headers: {
@@ -364,6 +365,29 @@ class AccountManagement extends React.Component {
         )
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.file !== this.state.file) {
+            this.importData()
+        }
+    }
+
+    importData() {
+        this.setLoading(true)
+        const formData = new FormData();
+        formData.append("upload", this.state.file);
+        Log('request', formData)
+        axios.post(`${SERVER_API}/users/import`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(res => {
+                Log('response', res)
+            })
+            .catch(err => this.setError(err))
+            .finally(() => this.setLoading(false))
+    }
+
     render() {
         return (
             <div>
@@ -390,6 +414,16 @@ class AccountManagement extends React.Component {
                         paddingLeft: '10px',
                         fontWeight: '500'
                     }}>{this.state.inActiveCount ? `(${this.state.inActiveCount} tài khoản mới)` : ''}</span>
+                    <input id="upload" type="file" style={{float: 'right', display: 'none'}} ref={'fileUpload'}
+                           onChange={(e) => this.setState({file: e.target.files[0]})}/>
+                    <Button
+                        basic
+                        color={'green'}
+                        style={{float: 'right'}}
+                        icon={'upload'}
+                        content={'Upload'}
+                        onClick={() => this.refs.fileUpload.click()}
+                    />
                     <Button
                         basic
                         color={'green'}

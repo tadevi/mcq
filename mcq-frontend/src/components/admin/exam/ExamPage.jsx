@@ -410,7 +410,7 @@ class ExamPage extends Component {
                             <Icon name={'redo'}/>
                         </Button>
                         <Button basic color={"green"} onClick={() => this.onAddExamClick()}>
-                            <Icon name='plus' color={'green'}/> Thêm đề thi
+                            <Icon name='plus' color={'green'}/>
                         </Button>
                     </Button.Group>
 
