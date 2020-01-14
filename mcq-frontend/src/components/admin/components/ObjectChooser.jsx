@@ -221,7 +221,8 @@ class ObjectChooser extends React.Component {
         return (
             <Dropdown
                 fluid
-                className={'selection single line'}
+                style={{ellipsisItem:true}}
+                className={'selection'}
                 text={this.state.textContent}
                 placeholder={this.props.placeholder}
                 disabled={this.state.loading}
@@ -284,7 +285,7 @@ class ObjectChooser extends React.Component {
 
     render() {
         return (
-            <div style={{display:'inline-block'}}>
+            <div style={{display:'flex',flexDirection:'row',alignItems:'center'}}>
                 {this.renderActionDropdown()}
                 {this.renderContentDropdown()}
                 {this.renderModal()}

@@ -1,6 +1,6 @@
-.ui.selection.dropdown.custom {
-    display: block !important;
-}
-.ui.dropdown.icon.custom {
-    display: block !important;
+.default.text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
 }
