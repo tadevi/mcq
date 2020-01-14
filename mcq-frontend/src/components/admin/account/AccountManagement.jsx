@@ -372,6 +372,9 @@ class AccountManagement extends React.Component {
     }
 
     importData() {
+        if (state === null) {
+            return
+        }
         this.setLoading(true)
         const formData = new FormData();
         formData.append("upload", this.state.file);
@@ -386,7 +389,10 @@ class AccountManagement extends React.Component {
                 Log('response', res)
             })
             .catch(err => this.setError(err))
-            .finally(() => this.setLoading(false))
+            .finally(() => this.setState({
+                loading: false,
+                file: null
+            }))
     }
 
     render() {
