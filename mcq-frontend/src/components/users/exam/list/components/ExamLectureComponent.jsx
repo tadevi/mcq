@@ -9,7 +9,7 @@ class ExamLectureComponent extends React.Component {
     state = {
         examslectures: [],
         passwordModal: false,
-        error:'',
+        error: '',
         loading: false
     }
 
@@ -89,7 +89,7 @@ class ExamLectureComponent extends React.Component {
                     {/*</Table.Header>*/}
                     <Table.Body>
                         {
-                            examslectures.map((item, index) => {
+                            examslectures.length > 0 ? examslectures.map((item, index) => {
                                 return (
                                     <Table.Row key={item._id} style={{cursor: 'pointer'}}
                                                onClick={() => this.onLectureClick(item)}>
@@ -114,7 +114,7 @@ class ExamLectureComponent extends React.Component {
                                         </Table.Cell>
                                     </Table.Row>
                                 )
-                            })
+                            }) : <p>Không có dữ liệu.</p>
                         }
                     </Table.Body>
                 </Table>
@@ -153,7 +153,7 @@ class ExamLectureComponent extends React.Component {
                         </Button>
                     </Modal.Actions>
                 </Modal>
-                <Loader active={this.state.loading} />
+                <Loader active={this.state.loading}/>
                 <Message error
                          content={this.state.error}
                          hidden={this.state.error === ''}

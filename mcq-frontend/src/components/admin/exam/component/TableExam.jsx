@@ -195,7 +195,7 @@ class TableExam extends React.Component {
 
     renderTableContent() {
         const examData = this.state.exams.data || []
-        return examData.map(item => {
+        return examData.length > 0 ? examData.map(item => {
             return (
                 <Table.Row key={item._id}>
                     <Table.Cell textAlign={'center'}>{item.className || ''}</Table.Cell>
@@ -213,25 +213,25 @@ class TableExam extends React.Component {
                             disabled={this.state.loading}>
                             <Dropdown.Menu>
                                 <Dropdown.Item
-                                    icon={<Icon name={'edit'} color={'orange'} /> }
+                                    icon={<Icon name={'edit'} color={'orange'}/>}
                                     onClick={() => this.onEditClick(item._id)}
                                 />
                                 <Dropdown.Item
-                                    icon={<Icon name={'delete'} color={'red'} /> }
+                                    icon={<Icon name={'delete'} color={'red'}/>}
                                     onClick={() => this.onDeleteClick(item._id)}
                                 />
                                 <Dropdown.Item
-                                    icon={<Icon name={'pie chart'} color={'green'} /> }
+                                    icon={<Icon name={'pie chart'} color={'green'}/>}
                                     onClick={() => this.props.history.push('/statistics/' + item._id)}/>
                                 <Dropdown.Item
-                                    icon={<Icon name={'download'} color={'blue'} /> }
+                                    icon={<Icon name={'download'} color={'blue'}/>}
                                     onClick={() => this.exportData(item._id, item.name)}/>
                             </Dropdown.Menu>
                         </Dropdown>
                     </Table.Cell>
                 </Table.Row>
             )
-        })
+        }) : <p>Không có dữ liệu</p>
     }
 }
 
