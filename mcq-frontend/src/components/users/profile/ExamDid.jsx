@@ -46,7 +46,8 @@ class ExamDid extends React.Component {
                         <Table.Row>
                             <Table.HeaderCell>Lớp</Table.HeaderCell>
                             <Table.HeaderCell>Môn học</Table.HeaderCell>
-                            <Table.HeaderCell>Chủ đề</Table.HeaderCell>
+                            <Table.HeaderCell>Chương</Table.HeaderCell>
+                            <Table.HeaderCell>Bài</Table.HeaderCell>
                             <Table.HeaderCell>Tên đề</Table.HeaderCell>
                             <Table.HeaderCell>Ngày làm</Table.HeaderCell>
                             <Table.HeaderCell>Điểm cao nhất</Table.HeaderCell>
@@ -61,6 +62,7 @@ class ExamDid extends React.Component {
                                         <Table.Cell>{item.className}</Table.Cell>
                                         <Table.Cell>{item.subjectName}</Table.Cell>
                                         <Table.Cell>{item.contentName}</Table.Cell>
+                                        <Table.Cell>{item.lessonName}</Table.Cell>
                                         <Table.Cell>{item.examName}</Table.Cell>
                                         <Table.Cell>
                                             <Moment format={'DD/MM/YY HH:mm'}>

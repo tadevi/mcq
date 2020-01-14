@@ -58,10 +58,11 @@ const style = {
 }
 
 const segmentStyle = {
-    minHeight: '80vh',
-    maxHeight: '85vh',
-    overflow: 'auto',
-    margin: '10px'
+    // minHeight: '80vh',
+    // maxHeight: '85vh',
+    // overflow: 'auto',
+    // margin: '10px'
+
 }
 
 class DashBoard extends Component {

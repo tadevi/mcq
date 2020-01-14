@@ -378,7 +378,8 @@ class AccountManagement extends React.Component {
         Log('request', formData)
         axios.post(`${SERVER_API}/users/import`, formData, {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                Authorization: getToken()
             }
         })
             .then(res => {
@@ -421,7 +422,7 @@ class AccountManagement extends React.Component {
                         color={'green'}
                         style={{float: 'right'}}
                         icon={'upload'}
-                        content={'Upload'}
+                        content={'Tải lên'}
                         onClick={() => this.refs.fileUpload.click()}
                     />
                     <Button
