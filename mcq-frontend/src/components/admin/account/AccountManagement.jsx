@@ -385,7 +385,7 @@ class AccountManagement extends React.Component {
                 Authorization: getToken()
             }
         })
-            .then(({data: res}) => {
+            .then(({res:data}) => {
                 Log('response', data)
                 if (!data.success)
                     this.setError(data.message)
