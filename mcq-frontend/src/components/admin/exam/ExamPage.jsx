@@ -181,8 +181,8 @@ class ExamPage extends Component {
             })
         }
         this.setLoading(true)
-        const {answer, contentId, datetime, examUrl, explainUrl, name, note, password, time, total} = this.state.examToEdit
-        const data = {answer, contentId, datetime, explainUrl, examUrl, name, note, password, time, total}
+        const {answer, lessonId, datetime, examUrl, explainUrl, name, note, password, time, total} = this.state.examToEdit
+        const data = {answer, lessonId, datetime, explainUrl, examUrl, name, note, password, time, total}
         userCallWithData(
             'PUT',
             `${SERVER_API}/exams/${id}`,
@@ -204,7 +204,7 @@ class ExamPage extends Component {
             this.setState({
                 examToEdit: {
                     ...this.state.examToEdit,
-                    contentId: this.state.contentId
+                    lessonId: this.state.lessonId
                 }
             }, () => this.createExam())
         }
@@ -403,7 +403,7 @@ class ExamPage extends Component {
 
                 </Grid.Column>
                 <Grid.Column>
-                    <Button.Group>
+                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                         <Button basic onClick={() => {
                             this.reloadData()
                         }}>
@@ -412,7 +412,7 @@ class ExamPage extends Component {
                         <Button basic color={"green"} onClick={() => this.onAddExamClick()}>
                             <Icon name='plus' color={'green'}/>
                         </Button>
-                    </Button.Group>
+                    </div>
 
                 </Grid.Column>
             </Grid.Row>

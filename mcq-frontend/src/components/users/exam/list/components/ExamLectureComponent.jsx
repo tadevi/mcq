@@ -80,13 +80,13 @@ class ExamLectureComponent extends React.Component {
         return (
             <div>
                 <Table selectable>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Tên</Table.HeaderCell>
-                            <Table.HeaderCell>Loại</Table.HeaderCell>
-                            <Table.HeaderCell>Ngày cập nhật</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
+                    {/*<Table.Header>*/}
+                    {/*    <Table.Row>*/}
+                    {/*        <Table.HeaderCell>Tên</Table.HeaderCell>*/}
+                    {/*        <Table.HeaderCell>Loại</Table.HeaderCell>*/}
+                    {/*        <Table.HeaderCell>Ngày cập nhật</Table.HeaderCell>*/}
+                    {/*    </Table.Row>*/}
+                    {/*</Table.Header>*/}
                     <Table.Body>
                         {
                             examslectures.map((item, index) => {

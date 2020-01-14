@@ -56,8 +56,8 @@ class LecturePage extends React.Component {
                     lectureToEdit: {},
                     success: 'Tạo bài giảng thành công!',
                     error: ''
-                })
-                this.getLectures(this.state.lectures.page)
+                }, () => this.getLectures(this.state.lectures.page))
+
             },
             err => this.setError(err),
             err => this.setError(err),
@@ -277,7 +277,7 @@ class LecturePage extends React.Component {
                 </Grid.Column>
                 <Grid.Column>
                     <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                        <Button basic onClick={() => this.reloadData()} >
+                        <Button basic onClick={() => this.reloadData()}>
                             <Icon name={'redo'}/>
                         </Button>
                         <Button basic color={"green"} onClick={() => this.setModalStatus(true)}>
