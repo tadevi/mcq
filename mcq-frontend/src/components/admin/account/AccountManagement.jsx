@@ -372,7 +372,7 @@ class AccountManagement extends React.Component {
     }
 
     importData() {
-        if (state === null) {
+        if (this.state.file === null) {
             return
         }
         this.setLoading(true)
@@ -385,8 +385,10 @@ class AccountManagement extends React.Component {
                 Authorization: getToken()
             }
         })
-            .then(res => {
-                Log('response', res)
+            .then(({data: res}) => {
+                Log('response', data)
+                if (!data.success)
+                    this.setError(data.message)
             })
             .catch(err => this.setError(err))
             .finally(() => this.setState({
