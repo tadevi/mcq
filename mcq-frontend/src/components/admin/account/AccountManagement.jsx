@@ -19,6 +19,7 @@ import axios from "axios";
 import fileDownload from "js-file-download";
 import UserEditor from "./components/UserEditor";
 import {Log} from "../../../utils/LogUtil";
+import Dialog from "../../Dialog";
 
 const initialState = {
     error: '',
@@ -372,7 +373,8 @@ class AccountManagement extends React.Component {
     }
 
     importData() {
-        if (this.state.file === null) {
+        Log('File URI',this.state.file)
+        if (this.state.file === undefined) {
             return
         }
         this.setLoading(true)
@@ -385,15 +387,21 @@ class AccountManagement extends React.Component {
                 Authorization: getToken()
             }
         })
-            .then(({res:data}) => {
+            .then((res) => {
+                const data = res.data
                 Log('response', data)
                 if (!data.success)
                     this.setError(data.message)
+                else
+                    this.setState({
+                        update: data.data,
+                        dialogVisible: true,
+                    })
             })
             .catch(err => this.setError(err))
             .finally(() => this.setState({
                 loading: false,
-                file: null
+                file: undefined
             }))
     }
 
@@ -474,6 +482,7 @@ class AccountManagement extends React.Component {
                 <Confirm
                     content={'Bạn có muốn thực hiện hành động này?'}
                     open={this.state.open}
+                    noLabel={undefined}
                     onCancel={() => this.setState({open: false})}
                     onConfirm={() => {
                         if (this.state.accountId)
@@ -511,6 +520,40 @@ class AccountManagement extends React.Component {
                         </Button>
                     </Modal.Actions>
                 </Modal>
+                <Dialog
+                    header={"Kết quả"}
+                    visible={this.state.dialogVisible}
+                    onClose={() => this.setState({dialogVisible: false})}
+                    onNo={() => this.setState({dialogVisible: false})}
+                    onYes={() => this.setState({dialogVisible: false})}
+                >
+                    <Grid>
+                        <Grid.Row columns={2}>
+                            <Grid.Column>
+                                Số người dùng đã import:
+                            </Grid.Column>
+                            <Grid.Column>
+                                {this.state.update ? this.state.update.total : ''}
+                            </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row columns={2}>
+                            <Grid.Column>
+                                Số người dùng đã cập nhật:
+                            </Grid.Column>
+                            <Grid.Column>
+                                {this.state.update ? this.state.update.updated : ''}
+                            </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row columns={2}>
+                            <Grid.Column>
+                                Số người dùng đã tạo mới:
+                            </Grid.Column>
+                            <Grid.Column>
+                                {this.state.update ? this.state.update.new : ''}
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                </Dialog>
             </div>
         )
     }
