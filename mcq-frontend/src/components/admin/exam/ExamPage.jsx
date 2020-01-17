@@ -1,10 +1,24 @@
-import React, {Component} from 'react'
-import {Button, Checkbox, Form, Grid, Header, Icon, Input, Loader, Message, Modal, Pagination} from 'semantic-ui-react'
+import React, {Component, createRef} from 'react'
+import {
+    Button,
+    Grid,
+    Header,
+    Icon,
+    Input,
+    Loader,
+    Message,
+    Modal,
+    Pagination
+} from 'semantic-ui-react'
 import {SERVER_API} from '../../../config'
 import ObjectChooser from '../components/ObjectChooser'
 import TableExam from "./component/TableExam";
 import ExamEditor from "./component/ExamEditor";
-import {userCall, userCallWithData} from "../../../utils/ApiUtils";
+import {getToken, parseBlob, userCall, userCallWithData} from "../../../utils/ApiUtils";
+import {Log} from "../../../utils/LogUtil";
+import axios from "axios";
+import Dialog from "../../Dialog";
+import fileDownload from "js-file-download";
 
 class ExamPage extends Component {
     state = {
@@ -44,6 +58,70 @@ class ExamPage extends Component {
         this.onLessonItemSelect = this.onLessonItemSelect.bind(this)
         this.setModalStatus = this.setModalStatus.bind(this)
         this.setLoading = this.setLoading.bind(this)
+    }
+
+    importData() {
+        Log('File URI', this.state.file)
+        if (this.state.file === undefined) {
+            return
+        }
+        this.setLoading(true)
+        const formData = new FormData();
+        formData.append("upload", this.state.file);
+        Log('request', formData)
+        axios.post(`${SERVER_API}/exams/import`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: getToken()
+            }
+        })
+            .then((res) => {
+                const data = res.data
+                Log('response', data)
+                if (!data.success)
+                    this.setError(data.message)
+                else
+                    this.setState({
+                        update: data.data,
+                        dialogVisible: true,
+                    })
+            })
+            .catch(err => this.setError(err))
+            .finally(() => this.setState({
+                loading: false,
+                file: undefined
+            }))
+    }
+
+    exportData() {
+        this.setLoading(true)
+        axios.get(
+            `${SERVER_API}/exams/export`,
+            {
+                headers: {
+                    Authorization: getToken()
+                },
+                responseType: 'blob'
+            }
+        ).then(res => {
+            if (res.data.type === 'application/json') {
+                parseBlob(res.data, ({message}) => {
+                    this.setError(message)
+                    this.timeout = setTimeout(() => this.setError(''), 3000)
+                })
+            } else {
+                let blob = new Blob([res.data], {type: res.headers['content-type']})
+                fileDownload(blob, 'exams.xlsx')
+            }
+        })
+            .catch(err => this.setError(err))
+            .finally(() => this.setLoading(false))
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.file !== this.state.file) {
+            this.importData()
+        }
     }
 
     handleExamChange(e, {name, value}) {
@@ -89,7 +167,10 @@ class ExamPage extends Component {
         userCallWithData(
             'POST',
             `${SERVER_API}/exams`,
-            this.state.examToEdit,
+            {
+                ...this.state.examToEdit,
+                time: parseInt(this.state.examToEdit.time)
+            },
             data => this.setState({
                 examToEdit: {},
                 success: 'Tạo đề thi thành công!',
@@ -289,6 +370,25 @@ class ExamPage extends Component {
                     {this.renderAddExamSection()}
                     <Grid.Row columns={1}>
                         <Grid.Column width={16}>
+                            <input id="upload" type="file" style={{float: 'right', display: 'none'}} ref={'fileUpload'}
+                                   onChange={(e) => this.setState({file: e.target.files[0]})}/>
+                            <Button
+                                basic
+                                color={'green'}
+                                style={{float: 'right'}}
+                                icon={'upload'}
+                                content={'Tải lên'}
+                                onClick={() => this.refs.fileUpload.click()}
+                            />
+                            <Button
+                                basic
+                                color={'green'}
+                                style={{float: 'right'}}
+                                icon={'download'}
+                                content={'Lưu'}
+                                onClick={() => this.exportData()}
+                            />
+                            <br/>
                             <Input
                                 fluid
                                 icon={'search'}
@@ -322,7 +422,47 @@ class ExamPage extends Component {
                 </Grid>
                 {this.renderModal()}
                 {this.renderPagination()}
+                {this.renderDialogResult()}
             </div>
+        )
+    }
+
+    renderDialogResult() {
+        return (
+            <Dialog
+                header={"Kết quả"}
+                visible={this.state.dialogVisible}
+                onClose={() => this.setState({dialogVisible: false})}
+                onNo={() => this.setState({dialogVisible: false})}
+                onYes={() => this.setState({dialogVisible: false})}
+            >
+                <Grid>
+                    <Grid.Row columns={2}>
+                        <Grid.Column>
+                            Số bài giảng đã import:
+                        </Grid.Column>
+                        <Grid.Column>
+                            {this.state.update ? this.state.update.total : ''}
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row columns={2}>
+                        <Grid.Column>
+                            Số bài giảng đã cập nhật:
+                        </Grid.Column>
+                        <Grid.Column>
+                            {this.state.update ? this.state.update.updated : ''}
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row columns={2}>
+                        <Grid.Column>
+                            Số bài giảng đã tạo mới:
+                        </Grid.Column>
+                        <Grid.Column>
+                            {this.state.update ? this.state.update.new : ''}
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+            </Dialog>
         )
     }
 
@@ -413,9 +553,9 @@ class ExamPage extends Component {
                             <Icon name='plus' color={'green'}/>
                         </Button>
                     </div>
-
                 </Grid.Column>
             </Grid.Row>
+
         )
     }
 
