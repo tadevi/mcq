@@ -370,25 +370,16 @@ class ExamPage extends Component {
                     {this.renderAddExamSection()}
                     <Grid.Row columns={1}>
                         <Grid.Column width={16}>
-                            <input id="upload" type="file" style={{float: 'right', display: 'none'}} ref={'fileUpload'}
-                                   onChange={(e) => this.setState({file: e.target.files[0]})}/>
-                            <Button
-                                basic
-                                color={'green'}
-                                style={{float: 'right'}}
-                                icon={'upload'}
-                                content={'Tải lên'}
-                                onClick={() => this.refs.fileUpload.click()}
-                            />
-                            <Button
-                                basic
-                                color={'green'}
-                                style={{float: 'right'}}
-                                icon={'download'}
-                                content={'Lưu'}
-                                onClick={() => this.exportData()}
-                            />
-                            <br/>
+                            {/*<input id="upload" type="file" style={{float: 'right', display: 'none'}} ref={'fileUpload'}*/}
+                            {/*       onChange={(e) => this.setState({file: e.target.files[0]})}/>*/}
+                            {/*<Button*/}
+                            {/*    basic*/}
+                            {/*    color={'green'}*/}
+                            {/*    style={{float: 'right'}}*/}
+                            {/*    icon={'upload'}*/}
+                            {/*    content={'Tải lên'}*/}
+                            {/*    onClick={() => this.refs.fileUpload.click()}*/}
+                            {/*/>*/}
                             <Input
                                 fluid
                                 icon={'search'}
@@ -551,6 +542,13 @@ class ExamPage extends Component {
                         </Button>
                         <Button basic color={"green"} onClick={() => this.onAddExamClick()}>
                             <Icon name='plus' color={'green'}/>
+                        </Button>
+                        <Button
+                            basic
+                            color={'green'}
+                            onClick={() => this.exportData()}
+                        >
+                            <Icon name={'download'} />
                         </Button>
                     </div>
                 </Grid.Column>
