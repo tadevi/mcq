@@ -1,6 +1,6 @@
 import React from "react";
-import {getRole, getToken, parseBlob, userCall, userCallWithData} from "../../../utils/ApiUtils";
-import {SERVER_API} from "../../../config";
+import { getRole, getToken, parseBlob, userCall, userCallWithData } from "../../../utils/ApiUtils";
+import { SERVER_API } from "../../../config";
 import './account.css'
 import {
     Button,
@@ -18,7 +18,7 @@ import Moment from "react-moment";
 import axios from "axios";
 import fileDownload from "js-file-download";
 import UserEditor from "./components/UserEditor";
-import {Log} from "../../../utils/LogUtil";
+import { Log } from "../../../utils/LogUtil";
 import Dialog from "../../Dialog";
 
 const initialState = {
@@ -42,7 +42,9 @@ class AccountManagement extends React.Component {
     state = {
         ...initialState
     }
-
+    constructor(props) {
+        super(props)
+    }
     componentWillUnmount() {
         clearTimeout(this.timeout)
     }
@@ -86,7 +88,7 @@ class AccountManagement extends React.Component {
         userCall(
             'GET',
             encodeURI(url),
-            data => this.setState({...data}),
+            data => this.setState({ ...data }),
             err => this.setError(err),
             err => this.setError(err),
             () => this.setLoading(false)
@@ -170,20 +172,20 @@ class AccountManagement extends React.Component {
                         Tên
                     </Table.HeaderCell>
                     <Table.HeaderCell textAlign={'center'}
-                                      sorted={sortLabel('role')}
-                                      onClick={() => handleSortClick('role')}
+                        sorted={sortLabel('role')}
+                        onClick={() => handleSortClick('role')}
                     >
                         Vai trò
                     </Table.HeaderCell>
                     <Table.HeaderCell textAlign={'center'}
-                                      sorted={sortLabel('datetime')}
-                                      onClick={() => handleSortClick('datetime')}
+                        sorted={sortLabel('datetime')}
+                        onClick={() => handleSortClick('datetime')}
                     >
                         Ngày tạo
                     </Table.HeaderCell>
                     <Table.HeaderCell textAlign={'center'}
-                                      sorted={sortLabel('remain')}
-                                      onClick={() => handleSortClick('remain')}
+                        sorted={sortLabel('remain')}
+                        onClick={() => handleSortClick('remain')}
                     >
                         Giờ còn lại
                     </Table.HeaderCell>
@@ -210,7 +212,7 @@ class AccountManagement extends React.Component {
     }
 
     renderPagination() {
-        const {page, totalPage} = this.state
+        const { page, totalPage } = this.state
         if (totalPage > 1)
             return (
                 <Pagination
@@ -219,11 +221,12 @@ class AccountManagement extends React.Component {
                     totalPages={totalPage}
                 />
             )
-        return <div/>
+        return <div />
     }
 
     renderButtonGroup(item) {
-        const {active} = this.state
+        const { active } = this.state
+        const visible=this.props.role!=='admin'?{display:'none'}:{}
         if (!active)
             return (
                 <ButtonGroup size={'mini'}>
@@ -234,40 +237,44 @@ class AccountManagement extends React.Component {
                         })
                     }}
                     >
-                        <Icon name={'delete'} color={'red'}/>
+                        <Icon name={'delete'} color={'red'} />
                     </Button>
                     <Button basic onClick={() => this.setState({
                         editModal: true,
                         userSelect: item
                     })}>
-                        <Icon name={'pencil'} color={'orange'}/>
+                        <Icon name={'pencil'} color={'orange'} />
                     </Button>
                 </ButtonGroup>
             )
+        
         return (
             <ButtonGroup size={'mini'}>
                 <Button basic onClick={() => this.setState({
                     accountId: item._id,
                     open: true
-                })}>
-                    <Icon color='red' name={'delete'}/>
+                })} style={visible}>
+                    <Icon color='red' name={'delete'} />
                 </Button>
                 <Button basic
-                        onClick={() => this.exportUserData(item._id, item.email)}>
-                    <Icon color={'green'} name={'download'}/>
+                    onClick={() => this.exportUserData(item._id, item.email)}>
+                    <Icon color={'green'} name={'download'} />
+                    <span style={this.props.role!=='admin'?{fontSize:'1.2em'}:{display:'none'}}>
+                        Lịch sử làm bài
+                    </span>
                 </Button>
                 <Button basic onClick={() => this.setState({
                     editModal: true,
                     userSelect: item
-                })}>
-                    <Icon name={'pencil'} color={'orange'}/>
+                })} style={visible}>
+                    <Icon name={'pencil'} color={'orange'} />
                 </Button>
             </ButtonGroup>
         )
     }
 
     renderContentTable() {
-        const {data} = this.state
+        const { data } = this.state
         return (data && data.length > 0) ? data.map(item => {
             return (
                 <Table.Row key={item._id}>
@@ -294,12 +301,12 @@ class AccountManagement extends React.Component {
                 </Table.Row>
             )
         }) : (
-            <Table.Row>
-                <Table.Cell>
-                    Không có dữ liệu
+                <Table.Row>
+                    <Table.Cell>
+                        Không có dữ liệu
                 </Table.Cell>
-            </Table.Row>
-        )
+                </Table.Row>
+            )
     }
 
     exportData() {
@@ -314,12 +321,12 @@ class AccountManagement extends React.Component {
             }
         ).then(res => {
             if (res.data.type === 'application/json') {
-                parseBlob(res.data, ({message}) => {
+                parseBlob(res.data, ({ message }) => {
                     this.setError(message)
                     this.timeout = setTimeout(() => this.setError(''), 3000)
                 })
             } else {
-                let blob = new Blob([res.data], {type: res.headers['content-type']})
+                let blob = new Blob([res.data], { type: res.headers['content-type'] })
                 fileDownload(blob, 'users.xlsx')
             }
         })
@@ -339,12 +346,12 @@ class AccountManagement extends React.Component {
             }
         ).then(res => {
             if (res.data.type === 'application/json') {
-                parseBlob(res.data, ({message}) => {
+                parseBlob(res.data, ({ message }) => {
                     this.setError(message)
                     this.timeout = setTimeout(() => this.setError(''), 3000)
                 })
             } else {
-                let blob = new Blob([res.data], {type: res.headers['content-type']})
+                let blob = new Blob([res.data], { type: res.headers['content-type'] })
                 fileDownload(blob, `${email}.xlsx`)
             }
         })
@@ -353,6 +360,8 @@ class AccountManagement extends React.Component {
     }
 
     getInActiveUser() {
+        if (this.props.role !== "admin")
+            return;
         this.setLoading(true)
         userCall(
             'GET',
@@ -373,7 +382,7 @@ class AccountManagement extends React.Component {
     }
 
     importData() {
-        Log('File URI',this.state.file)
+        Log('File URI', this.state.file)
         if (this.state.file === undefined) {
             return
         }
@@ -406,6 +415,7 @@ class AccountManagement extends React.Component {
     }
 
     render() {
+
         return (
             <div>
                 <Message
@@ -421,42 +431,45 @@ class AccountManagement extends React.Component {
                     hidden={this.state.success === ''}
                 />
                 <div>
-                    <Checkbox
-                        toggle
-                        label={'Đã xác nhận'}
-                        defaultChecked={this.state.active}
-                        onClick={(e, {checked}) => this.toggleActive(checked)}
-                    />
-                    <span style={{
-                        paddingLeft: '10px',
-                        fontWeight: '500'
-                    }}>{this.state.inActiveCount ? `(${this.state.inActiveCount} tài khoản mới)` : ''}</span>
-                    <input id="upload" type="file" style={{float: 'right', display: 'none'}} ref={'fileUpload'}
-                           onChange={(e) => this.setState({file: e.target.files[0]})}/>
-                    <Button
-                        basic
-                        color={'green'}
-                        style={{float: 'right'}}
-                        icon={'upload'}
-                        content={'Tải lên'}
-                        onClick={() => this.refs.fileUpload.click()}
-                    />
-                    <Button
-                        basic
-                        color={'green'}
-                        style={{float: 'right'}}
-                        icon={'download'}
-                        content={'Lưu'}
-                        onClick={() => this.exportData()}
-                    />
+                    <div style={this.props.role !== 'user' ? { display: 'none' } : {}}>
+                        <Checkbox
+                            toggle
+                            label={'Đã xác nhận'}
+                            defaultChecked={this.state.active}
+                            onClick={(e, { checked }) => this.toggleActive(checked)}
+                        />
+                        <span style={{
+                            paddingLeft: '10px',
+                            fontWeight: '500'
+                        }}>{this.state.inActiveCount ? `(${this.state.inActiveCount} tài khoản mới)` : ''}</span>
+                        <input id="upload" type="file" style={{ float: 'right', display: 'none' }} ref={'fileUpload'}
+                            onChange={(e) => this.setState({ file: e.target.files[0] })} />
+
+                        <Button
+                            basic
+                            color={'green'}
+                            style={{ float: 'right' }}
+                            icon={'upload'}
+                            content={'Tải lên'}
+                            onClick={() => this.refs.fileUpload.click()}
+                        />
+                        <Button
+                            basic
+                            color={'green'}
+                            style={{ float: 'right' }}
+                            icon={'download'}
+                            content={'Lưu'}
+                            onClick={() => this.exportData()}
+                        />
+                    </div>
                     <Form.Input
                         fluid
                         icon={'search'}
                         iconPosition={'left'}
-                        style={{marginTop: '30px'}}
+                        style={{ marginTop: '30px' }}
                         placeholder='Tìm kiếm theo tên, email, số điện thoại'
                         value={this.state.textSearch}
-                        onChange={(e, {value}) => this.setState({textSearch: value})}
+                        onChange={(e, { value }) => this.setState({ textSearch: value })}
                         onKeyPress={e => {
                             if (e.key === 'Enter') {
                                 this.fetchPage(1)
@@ -470,8 +483,8 @@ class AccountManagement extends React.Component {
                         {this.renderContentTable()}
                     </Table.Body>
                 </Table>
-                <Loader active={this.state.loading}/>
-                <div style={{marginBottom: '10px', display: this.state.active ? 'none' : 'block'}}>
+                <Loader active={this.state.loading} />
+                <div style={{ marginBottom: '10px', display: this.state.active ? 'none' : 'block' }}>
                     <Button primary onClick={() => this.acceptAllAccount()}>
                         Phê duyệt tất cả
                     </Button>
@@ -483,7 +496,7 @@ class AccountManagement extends React.Component {
                     content={'Bạn có muốn thực hiện hành động này?'}
                     open={this.state.open}
                     noLabel={undefined}
-                    onCancel={() => this.setState({open: false})}
+                    onCancel={() => this.setState({ open: false })}
                     onConfirm={() => {
                         if (this.state.accountId)
                             this.deleteAccount(this.state.accountId)
@@ -493,19 +506,19 @@ class AccountManagement extends React.Component {
                         })
                     }}
                 />
-                <Modal open={this.state.editModal} onClose={() => this.setState({editModal: false})}>
+                <Modal open={this.state.editModal} onClose={() => this.setState({ editModal: false })}>
                     <Modal.Header>
                         Thay đổi thông tin
                     </Modal.Header>
                     <Modal.Content>
                         <UserEditor defaultActive={this.state.userSelect ? this.state.userSelect.active : false}
-                                    defaultRemain={this.state.userSelect ? this.state.userSelect.remain : 300}
-                                    defaultRole={this.state.userSelect ? this.state.userSelect.role : 'user'}
-                                    onChange={editData => this.setState({editData})}/>
+                            defaultRemain={this.state.userSelect ? this.state.userSelect.remain : 300}
+                            defaultRole={this.state.userSelect ? this.state.userSelect.role : 'user'}
+                            onChange={editData => this.setState({ editData })} />
                     </Modal.Content>
                     <Modal.Actions>
-                        <Button color='red' onClick={() => this.setState({editModal: false})}>
-                            <Icon name='remove'/> Thoát
+                        <Button color='red' onClick={() => this.setState({ editModal: false })}>
+                            <Icon name='remove' /> Thoát
                         </Button>
                         <Button color='green' onClick={() => {
                             if (this.state.userSelect)
@@ -516,16 +529,16 @@ class AccountManagement extends React.Component {
                             })
                         }
                         }>
-                            <Icon name='checkmark'/> Chấp nhận
+                            <Icon name='checkmark' /> Chấp nhận
                         </Button>
                     </Modal.Actions>
                 </Modal>
                 <Dialog
                     header={"Kết quả"}
                     visible={this.state.dialogVisible}
-                    onClose={() => this.setState({dialogVisible: false})}
-                    onNo={() => this.setState({dialogVisible: false})}
-                    onYes={() => this.setState({dialogVisible: false})}
+                    onClose={() => this.setState({ dialogVisible: false })}
+                    onNo={() => this.setState({ dialogVisible: false })}
+                    onYes={() => this.setState({ dialogVisible: false })}
                 >
                     <Grid>
                         <Grid.Row columns={2}>

@@ -22,7 +22,7 @@ const routeConfig = [
         content: "Quản lý tài khoản",
         component: <AccountManagement/>,
         icon: "user",
-        require: ['admin']
+        require: ['admin','teacher']
     },
     {
         route: "/admin/exams",
@@ -40,13 +40,15 @@ const routeConfig = [
     }
 ]
 
-const MyRouter = () => (
+const MyRouter = ({role}) => (
     <Switch>
         {
             routeConfig.slice().reverse().map((item, index) => {
                 return (
                     <Route exact path={item.route} key={item.route}>
-                        {item.component}
+                        {
+                            item.icon==="user"? <AccountManagement role={role} /> : item.component
+                        }
                     </Route>
                 )
             })
@@ -150,7 +152,7 @@ class DashBoard extends Component {
                             </Grid.Column>
                             <Grid.Column width={13}>
                                 <Segment style={segmentStyle}>
-                                    <MyRouter/>
+                                    <MyRouter role={user.role}/>
                                 </Segment>
                             </Grid.Column>
                         </Grid.Row>
