@@ -431,7 +431,7 @@ class AccountManagement extends React.Component {
                     hidden={this.state.success === ''}
                 />
                 <div>
-                    <div style={this.props.role !== 'user' ? { display: 'none' } : {}}>
+                    <div style={this.props.role !== 'admin' ? { display: 'none' } : {}}>
                         <Checkbox
                             toggle
                             label={'Đã xác nhận'}
