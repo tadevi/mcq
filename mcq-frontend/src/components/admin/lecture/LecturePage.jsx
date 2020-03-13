@@ -276,7 +276,7 @@ class LecturePage extends React.Component {
 
                 </Grid.Column>
                 <Grid.Column>
-                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}>
                         <Button basic onClick={() => this.reloadData()}>
                             <Icon name={'redo'}/>
                         </Button>
