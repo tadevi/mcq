@@ -226,7 +226,7 @@ class AccountManagement extends React.Component {
 
     renderButtonGroup(item) {
         const { active } = this.state
-        const visible=this.props.role!=='admin'?{display:'none'}:{}
+        const visible = this.props.role !== 'admin' ? { display: 'none' } : {}
         if (!active)
             return (
                 <ButtonGroup size={'mini'}>
@@ -247,7 +247,7 @@ class AccountManagement extends React.Component {
                     </Button>
                 </ButtonGroup>
             )
-        
+
         return (
             <ButtonGroup size={'mini'}>
                 <Button basic onClick={() => this.setState({
@@ -259,7 +259,7 @@ class AccountManagement extends React.Component {
                 <Button basic
                     onClick={() => this.exportUserData(item._id, item.email)}>
                     <Icon color={'green'} name={'download'} />
-                    <span style={this.props.role!=='admin'?{fontSize:'1.2em'}:{display:'none'}}>
+                    <span style={this.props.role !== 'admin' ? { fontSize: '1.2em' } : { display: 'none' }}>
                         Lịch sử làm bài
                     </span>
                 </Button>
@@ -292,7 +292,7 @@ class AccountManagement extends React.Component {
                     </Table.Cell>
                     <Table.Cell>{item.email}</Table.Cell>
                     <Table.Cell>{item.phone}</Table.Cell>
-                    <Table.Cell>
+                    <Table.Cell textAlign='center'>
 
                         {
                             this.renderButtonGroup(item)
@@ -431,37 +431,37 @@ class AccountManagement extends React.Component {
                     hidden={this.state.success === ''}
                 />
                 <div>
-                    <div style={this.props.role !== 'admin' ? { display: 'none' } : {}}>
-                        <Checkbox
-                            toggle
-                            label={'Đã xác nhận'}
-                            defaultChecked={this.state.active}
-                            onClick={(e, { checked }) => this.toggleActive(checked)}
-                        />
-                        <span style={{
+
+                    <Checkbox
+                        style={this.props.role !== 'admin' ? { display: 'none' } : {}}
+                        toggle
+                        label={'Đã xác nhận'}
+                        defaultChecked={this.state.active}
+                        onClick={(e, { checked }) => this.toggleActive(checked)}
+                    />
+                    <span
+                        style={this.props.role !== 'admin' ? { display: 'none' } : {
                             paddingLeft: '10px',
                             fontWeight: '500'
                         }}>{this.state.inActiveCount ? `(${this.state.inActiveCount} tài khoản mới)` : ''}</span>
-                        <input id="upload" type="file" style={{ float: 'right', display: 'none' }} ref={'fileUpload'}
-                            onChange={(e) => this.setState({ file: e.target.files[0] })} />
+                    <input id="upload" type="file" style={{ float: 'right', display: 'none' }} ref={'fileUpload'}
+                        onChange={(e) => this.setState({ file: e.target.files[0] })} />
 
-                        <Button
-                            basic
-                            color={'green'}
-                            style={{ float: 'right' }}
-                            icon={'upload'}
-                            content={'Tải lên'}
-                            onClick={() => this.refs.fileUpload.click()}
-                        />
-                        <Button
-                            basic
-                            color={'green'}
-                            style={{ float: 'right' }}
-                            icon={'download'}
-                            content={'Lưu'}
-                            onClick={() => this.exportData()}
-                        />
-                    </div>
+                    <Button
+                        style={this.props.role !== 'admin' ? { display: 'none' } : { float: 'right' }}
+                        basic
+                        color={'green'}
+                        icon={'upload'}
+                        content={'Tải lên'}
+                        onClick={() => this.refs.fileUpload.click()}
+                    />
+                    <Button
+                        basic
+                        color={'green'}
+                        style={{ float: 'right', marginLeft:'10px' }}
+                        icon={'download'}
+                        onClick={() => this.exportData()}
+                    />
                     <Form.Input
                         fluid
                         icon={'search'}

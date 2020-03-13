@@ -1,4 +1,4 @@
-import React, {Component, createRef} from 'react'
+import React, { Component, createRef } from 'react'
 import {
     Button,
     Grid,
@@ -10,12 +10,12 @@ import {
     Modal,
     Pagination
 } from 'semantic-ui-react'
-import {SERVER_API} from '../../../config'
+import { SERVER_API } from '../../../config'
 import ObjectChooser from '../components/ObjectChooser'
 import TableExam from "./component/TableExam";
 import ExamEditor from "./component/ExamEditor";
-import {getToken, parseBlob, userCall, userCallWithData} from "../../../utils/ApiUtils";
-import {Log} from "../../../utils/LogUtil";
+import { getToken, parseBlob, userCall, userCallWithData } from "../../../utils/ApiUtils";
+import { Log } from "../../../utils/LogUtil";
 import axios from "axios";
 import Dialog from "../../Dialog";
 import fileDownload from "js-file-download";
@@ -105,12 +105,12 @@ class ExamPage extends Component {
             }
         ).then(res => {
             if (res.data.type === 'application/json') {
-                parseBlob(res.data, ({message}) => {
+                parseBlob(res.data, ({ message }) => {
                     this.setError(message)
                     this.timeout = setTimeout(() => this.setError(''), 3000)
                 })
             } else {
-                let blob = new Blob([res.data], {type: res.headers['content-type']})
+                let blob = new Blob([res.data], { type: res.headers['content-type'] })
                 fileDownload(blob, 'exams.xlsx')
             }
         })
@@ -124,7 +124,7 @@ class ExamPage extends Component {
         }
     }
 
-    handleExamChange(e, {name, value}) {
+    handleExamChange(e, { name, value }) {
         this.setState({
             examToEdit: {
                 ...this.state.examToEdit,
@@ -192,7 +192,7 @@ class ExamPage extends Component {
     getExam(pageNumber = 1) {
         this.setLoading(true)
         const searchPart = this.state.textSearch ? `&search=${this.state.textSearch}` : ''
-        const {sortColumn, sortDirection} = this.state
+        const { sortColumn, sortDirection } = this.state
         const sortPart = `&sort=${sortDirection === 'ascending' ? '+' : '-'}${sortColumn}`
         let url = `${SERVER_API}/exams?page=${pageNumber}${sortPart}${searchPart}`
         if (this.state.contentId)
@@ -200,7 +200,7 @@ class ExamPage extends Component {
         userCall(
             'GET',
             encodeURI(url),
-            data => this.setState({exams: data}),
+            data => this.setState({ exams: data }),
             err => this.setError(err),
             err => this.setError(err),
             () => this.setLoading(false)
@@ -262,8 +262,8 @@ class ExamPage extends Component {
             })
         }
         this.setLoading(true)
-        const {answer, lessonId, datetime, examUrl, explainUrl, name, note, password, time, total} = this.state.examToEdit
-        const data = {answer, lessonId, datetime, explainUrl, examUrl, name, note, password, time, total}
+        const { answer, lessonId, datetime, examUrl, explainUrl, name, note, password, time, total } = this.state.examToEdit
+        const data = { answer, lessonId, datetime, explainUrl, examUrl, name, note, password, time, total }
         userCallWithData(
             'PUT',
             `${SERVER_API}/exams/${id}`,
@@ -302,7 +302,7 @@ class ExamPage extends Component {
     renderModal() {
         return (
             <Modal open={this.state.modal} closeIcon onClose={() => this.setModalStatus(false)}>
-                <Header icon='archive' content={this.state.editMode ? "Thay đổi" : "Thêm mới"}/>
+                <Header icon='archive' content={this.state.editMode ? "Thay đổi" : "Thêm mới"} />
                 <Modal.Content>
                     <ExamEditor
                         initData={this.state.examToEdit}
@@ -314,10 +314,10 @@ class ExamPage extends Component {
                 </Modal.Content>
                 <Modal.Actions>
                     <Button color='red' onClick={() => this.setModalStatus(false)}>
-                        <Icon name='remove'/> Đóng
+                        <Icon name='remove' /> Đóng
                     </Button>
                     <Button color='green' onClick={() => this.onModalYes()}>
-                        <Icon name='checkmark'/> Chấp nhận
+                        <Icon name='checkmark' /> Chấp nhận
                     </Button>
                 </Modal.Actions>
             </Modal>
@@ -333,7 +333,7 @@ class ExamPage extends Component {
     }
 
     renderPagination() {
-        const {exams} = this.state
+        const { exams } = this.state
         if (exams.totalPage > 1)
             return (
                 <Pagination
@@ -342,7 +342,7 @@ class ExamPage extends Component {
                     totalPages={exams.totalPage}
                 />
             )
-        return <div/>
+        return <div />
     }
 
     handleOnSortChange(data) {
@@ -352,14 +352,14 @@ class ExamPage extends Component {
     }
 
     render() {
-        const {error, success} = this.state
+        const { error, success } = this.state
         return (
             <div>
                 <Message
                     error={error !== ''}
                     content={error}
                     hidden={error === ''}
-                    header={'Lỗi'}/>
+                    header={'Lỗi'} />
                 <Message
                     success={success !== ''}
                     content={success}
@@ -384,10 +384,10 @@ class ExamPage extends Component {
                                 fluid
                                 icon={'search'}
                                 iconPosition={'left'}
-                                style={{marginTop: '30px'}}
+                                style={{ marginTop: '30px' }}
                                 placeholder='Tên đề thi'
                                 value={this.state.textSearch}
-                                onChange={(e, {value}) => this.setState({textSearch: value})}
+                                onChange={(e, { value }) => this.setState({ textSearch: value })}
                                 onKeyPress={e => {
                                     if (e.key === 'Enter') {
                                         this.getExam(1)
@@ -407,7 +407,7 @@ class ExamPage extends Component {
                                 onError={err => this.setError(err)}
                                 onLoading={status => this.setLoading(status)}
                             />
-                            <Loader active={this.state.loading}/>
+                            <Loader active={this.state.loading} />
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
@@ -423,9 +423,9 @@ class ExamPage extends Component {
             <Dialog
                 header={"Kết quả"}
                 visible={this.state.dialogVisible}
-                onClose={() => this.setState({dialogVisible: false})}
-                onNo={() => this.setState({dialogVisible: false})}
-                onYes={() => this.setState({dialogVisible: false})}
+                onClose={() => this.setState({ dialogVisible: false })}
+                onNo={() => this.setState({ dialogVisible: false })}
+                onYes={() => this.setState({ dialogVisible: false })}
             >
                 <Grid>
                     <Grid.Row columns={2}>
@@ -457,7 +457,7 @@ class ExamPage extends Component {
         )
     }
 
-    onClassItemSelect({value}) {
+    onClassItemSelect({ value }) {
         this.setState({
             classId: value,
             subjectId: '', //reset subject id
@@ -466,7 +466,7 @@ class ExamPage extends Component {
         })
     }
 
-    onSubjectItemSelect({value}) {
+    onSubjectItemSelect({ value }) {
         this.setState({
             subjectId: value,
             contentId: '',
@@ -474,14 +474,14 @@ class ExamPage extends Component {
         })
     }
 
-    onContentItemSelect({value}) {
+    onContentItemSelect({ value }) {
         this.setState({
             contentId: value,
             lessonId: ''
         })
     }
 
-    onLessonItemSelect({value}) {
+    onLessonItemSelect({ value }) {
         this.setState({
             lessonId: value
         }, () => this.getExam(1))
@@ -504,52 +504,40 @@ class ExamPage extends Component {
             <Grid.Row columns={5} stretched>
                 <Grid.Column>
                     <ObjectChooser onError={this.setError}
-                                   placeholder='Lớp'
-                                   name='classes'
-                                   reload={this.state.reload}
-                                   onContentSelect={this.onClassItemSelect}
+                        placeholder='Lớp'
+                        name='classes'
+                        reload={this.state.reload}
+                        onContentSelect={this.onClassItemSelect}
                     />
                 </Grid.Column>
                 <Grid.Column>
                     <ObjectChooser onError={this.setError}
-                                   placeholder='Môn'
-                                   name='subjects'
-                                   parentId={this.state.classId}
-                                   onContentSelect={this.onSubjectItemSelect}/>
+                        placeholder='Môn'
+                        name='subjects'
+                        parentId={this.state.classId}
+                        onContentSelect={this.onSubjectItemSelect} />
                 </Grid.Column>
                 <Grid.Column>
                     <ObjectChooser onError={this.setError}
-                                   placeholder={'Chương'}
-                                   name={'contents'}
-                                   parentId={this.state.subjectId}
-                                   onContentSelect={this.onContentItemSelect}/>
+                        placeholder={'Chương'}
+                        name={'contents'}
+                        parentId={this.state.subjectId}
+                        onContentSelect={this.onContentItemSelect} />
                 </Grid.Column>
                 <Grid.Column>
                     <ObjectChooser onError={this.setError}
-                                   placeholder='Bài'
-                                   name='lessons'
-                                   parentId={this.state.contentId}
-                                   onDelete={() => this.reloadData()}
-                                   onContentSelect={this.onLessonItemSelect}/>
+                        placeholder='Bài'
+                        name='lessons'
+                        parentId={this.state.contentId}
+                        onDelete={() => this.reloadData()}
+                        onContentSelect={this.onLessonItemSelect} />
 
                 </Grid.Column>
                 <Grid.Column>
-                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                        <Button basic onClick={() => {
-                            this.reloadData()
-                        }}>
-                            <Icon name={'redo'}/>
-                        </Button>
-                        <Button basic color={"green"} onClick={() => this.onAddExamClick()}>
-                            <Icon name='plus' color={'green'}/>
-                        </Button>
-                        <Button
-                            basic
-                            color={'green'}
-                            onClick={() => this.exportData()}
-                        >
-                            <Icon name={'download'} />
-                        </Button>
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
+                        <Button basic onClick={() => this.reloadData()} icon='redo' />
+                        <Button basic color={"green"} onClick={() => this.onAddExamClick()} icon='plus' />
+                        <Button basic color={'green'} icon={'download'} onClick={() => this.exportData()} />
                     </div>
                 </Grid.Column>
             </Grid.Row>
