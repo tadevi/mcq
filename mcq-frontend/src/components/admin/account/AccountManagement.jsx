@@ -452,7 +452,6 @@ class AccountManagement extends React.Component {
                         basic
                         color={'green'}
                         icon={'upload'}
-                        content={'Tải lên'}
                         onClick={() => this.refs.fileUpload.click()}
                     />
                     <Button

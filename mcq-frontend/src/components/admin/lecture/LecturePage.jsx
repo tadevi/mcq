@@ -277,12 +277,8 @@ class LecturePage extends React.Component {
                 </Grid.Column>
                 <Grid.Column>
                     <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}>
-                        <Button basic onClick={() => this.reloadData()}>
-                            <Icon name={'redo'}/>
-                        </Button>
-                        <Button basic color={"green"} onClick={() => this.setModalStatus(true)}>
-                            <Icon name='plus' color={'green'}/>
-                        </Button>
+                        <Button  basic onClick={() => this.reloadData()} icon='redo' />
+                        <Button  basic color={"green"} onClick={() => this.setModalStatus(true)} icon='plus' color='green' />
                     </div>
                 </Grid.Column>
             </Grid.Row>
