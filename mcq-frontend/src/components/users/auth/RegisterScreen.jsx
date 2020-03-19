@@ -1,9 +1,9 @@
 import React from 'react'
-import {Button, Form, Grid, Header, Image, Loader, Message, Segment} from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Image, Loader, Message, Segment, Select } from 'semantic-ui-react'
 import validator from 'validator'
-import {SERVER_API} from '../../../config'
-import {anonymousCallWithData} from "../../../utils/ApiUtils";
-import {withRouter} from 'react-router-dom'
+import { SERVER_API } from '../../../config'
+import { anonymousCallWithData } from "../../../utils/ApiUtils";
+import { withRouter } from 'react-router-dom'
 
 
 const heightStyle = {
@@ -13,6 +13,19 @@ const widthStyle = {
     maxWidth: 450
 }
 
+const roleOptions = [
+    {
+        key: 'parent',
+        value: 'parent',
+        text: 'Phụ huynh'
+    },
+    {
+        key: 'user',
+        value: 'user',
+        text: 'Học sinh'
+    }
+]
+
 class RegisterScreen extends React.Component {
     state = {
         email: '',
@@ -20,6 +33,7 @@ class RegisterScreen extends React.Component {
         rePassword: '',
         name: '',
         phone: '',
+        role: 'user',
         formError: '',
         formSuccess: false,
         loading: false,
@@ -32,17 +46,15 @@ class RegisterScreen extends React.Component {
         this.onSubmit = this.onSubmit.bind(this)
     }
 
-    handleChange(e, {name, value}) {
+    handleChange(e, { name, value }) {
         this.setState({
             [name]: value
         })
     }
 
     registerClick() {
-        this.setState({
-            loading: true
-        })
-        const {name, email, password, phone} = this.state
+        this.setLoading(true);
+        const { name, email, password, phone, role } = this.state
         anonymousCallWithData(
             'POST',
             `${SERVER_API}/signup`,
@@ -50,34 +62,37 @@ class RegisterScreen extends React.Component {
                 name,
                 email,
                 password,
-                phone
+                phone,
+                role
             },
             data => {
                 this.setState({
-                        formSuccess: true
-                    },
+                    formSuccess: true
+                },
                     () => {
                         this.setState({
                             redirectLoading: true
                         })
                         this.timeout = setTimeout(() => {
-                            const {history} = this.props
+                            const { history } = this.props
                             history.push('/')
                         }, 2000)
                     })
             },
-            err => this.setState({
-                formError: err
-            }),
-            err => this.setState({
-                formError: err
-            })
-            ,
-            () =>
-                this.setState({
-                    loading: false
-                })
+            err => this.setError(err),
+            err => this.setError(err),
+            () => this.setLoading(false)
         )
+    }
+    setLoading(loading) {
+        this.setState({
+            loading
+        })
+    }
+    setError(err) {
+        this.setState({
+            formError: err
+        })
     }
 
     componentDidMount() {
@@ -104,23 +119,23 @@ class RegisterScreen extends React.Component {
     }
 
     render() {
-        const {formSuccess, formError, loading, email, password, rePassword, phone, name} = this.state
+        const { formSuccess, formError, loading, email, password, rePassword, phone, name } = this.state
         return (
             <div>
                 <Grid textAlign='center' style={heightStyle} verticalAlign='middle'>
                     <Grid.Column style={widthStyle}>
                         <Header as='h2' color='teal' textAlign='center'>
-                            <Image src='https://www.digicert.com/account/images/login-shield.png'/> Đăng ký tài khoản
+                            <Image src='https://www.digicert.com/account/images/login-shield.png' /> Đăng ký tài khoản
                         </Header>
                         <Form size='large' error={formError} loading={loading}
-                              success={formSuccess}>
+                            success={formSuccess}>
                             <Segment stacked>
                                 <Message
                                     error
                                     attached
                                     header="Error"
                                     content={this.state.formError}
-                                    style={{marginBottom: '10px'}}
+                                    style={{ marginBottom: '10px' }}
                                 />
                                 <Form.Input
                                     required
@@ -173,6 +188,13 @@ class RegisterScreen extends React.Component {
                                     value={name}
                                     onChange={this.handleChange}
                                 />
+                                <Form.Select
+                                    fluid
+                                    placeholder='Chọn vai trò...'
+                                    options={roleOptions}
+                                    name='role'
+                                    onChange={this.handleChange}
+                                />
                                 <Message success>
                                     Yêu cầu tạo tài khoản sẽ được gửi đến người quản trị và xác nhận.
                                 </Message>
@@ -183,7 +205,7 @@ class RegisterScreen extends React.Component {
                         </Form>
                     </Grid.Column>
                 </Grid>
-                <Loader active={this.state.redirectLoading}/>
+                <Loader active={this.state.redirectLoading} />
             </div>
         )
     }

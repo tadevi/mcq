@@ -22,7 +22,7 @@ const routeConfig = [
         content: "Quản lý tài khoản",
         component: <AccountManagement/>,
         icon: "user",
-        require: ['admin','teacher']
+        require: ['admin','teacher','parent']
     },
     {
         route: "/admin/exams",
