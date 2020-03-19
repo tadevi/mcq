@@ -89,7 +89,7 @@ class RegisterScreen extends React.Component {
             loading
         })
     }
-    setError(err) {
+    setError(errc) {
         this.setState({
             formError: err
         })

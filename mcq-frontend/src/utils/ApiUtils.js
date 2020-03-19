@@ -182,10 +182,15 @@ export function getRole(role) {
     } else if (role === 'teacher') {
         return 'Giáo viên'
     }
-    return ''
+    else if(role==='parent'){
+        return 'Phụ huynh'
+    }
+    return 'Undefined'
 }
 
 export function parseBlob(data, onFinish) {
     new Response(data).text().then(data => onFinish(JSON.parse(data))).catch(() => {
     })
 }
+
+export const roleSupport=['teacher','admin','parent','user']

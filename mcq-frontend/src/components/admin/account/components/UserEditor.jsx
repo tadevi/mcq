@@ -1,24 +1,13 @@
 import React from "react";
 import {Button, Checkbox, Form, Select, Table} from 'semantic-ui-react'
-import {getRole} from "../../../../utils/ApiUtils";
+import {getRole, roleSupport} from "../../../../utils/ApiUtils";
 
-const options = [
-    {
-        key: 'user',
-        value: 'user',
-        text: getRole('user')
-    },
-    {
-        key: 'teacher',
-        value: 'teacher',
-        text: getRole('teacher')
-    },
-    {
-        key: 'admin',
-        value: 'admin',
-        text: getRole('admin')
-    }
-]
+const options = roleSupport.map(item=>({
+    key:item,
+    value: item,
+    text:getRole(item)
+}))
+
 export default class UserEditor extends React.Component {
     state = {
         active: this.props.defaultActive || false,
