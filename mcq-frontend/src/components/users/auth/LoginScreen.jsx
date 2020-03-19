@@ -1,11 +1,11 @@
 import React from 'react'
-import {Button, Form, Grid, Header, Image, Message, Segment} from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
 
-import {withRouter} from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import validator from 'validator'
-import {SERVER_API} from '../../../config'
+import { SERVER_API } from '../../../config'
 
-import {anonymousCallWithData, getToken, setToken} from "../../../utils/ApiUtils";
+import { anonymousCallWithData, getToken, setToken } from "../../../utils/ApiUtils";
 
 class LoginScreen extends React.Component {
     _isMounted = false
@@ -30,7 +30,7 @@ class LoginScreen extends React.Component {
             })
     }
 
-    onTextChange(event, {name, value}) {
+    onTextChange(event, { name, value }) {
         this.safeSetState({
             [name]: value
         })
@@ -49,14 +49,14 @@ class LoginScreen extends React.Component {
     }
 
     onLoginClick() {
-        const onLoginSuccess = ({user, token}) => {
+        const onLoginSuccess = ({ user, token }) => {
             setToken(token)
             this.safeSetState({
                 user
             })
         }
         const validateInput = () => {
-            const {email, password} = this.state
+            const { email, password } = this.state
             if (!validator.isEmail(email)) {
                 this.safeSetState({
                     formError: 'Email không đúng!'
@@ -72,7 +72,7 @@ class LoginScreen extends React.Component {
         if (!validateInput()) {
             return
         }
-        const {email, password} = this.state;
+        const { email, password } = this.state;
         this.setLoading(true)
         anonymousCallWithData(
             'POST',
@@ -98,18 +98,20 @@ class LoginScreen extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const {history} = this.props
-        const {token} = this.state
+        const { history } = this.props
+        const { token } = this.state
         if (token) {
             history.push('/')
         }
-        const {user} = this.state
+        const { user } = this.state
         if (prevState.user !== user) {
             if (user) {
                 if (user.role === 'admin') {
                     history.push('/admin/')
                 } else if (user.role === 'teacher') {
                     history.push('/admin/exams')
+                } else if (user.role === 'parent') {
+                    history.push('/admin/users')
                 } else {
                     history.push('/')
                 }
@@ -122,12 +124,12 @@ class LoginScreen extends React.Component {
     }
 
     render() {
-        const {loading, formError, email, password} = this.state;
+        const { loading, formError, email, password } = this.state;
         return (
-            <Grid textAlign='center' style={{height: '80vh'}} verticalAlign='middle'>
-                <Grid.Column style={{maxWidth: 450}}>
+            <Grid textAlign='center' style={{ height: '80vh' }} verticalAlign='middle'>
+                <Grid.Column style={{ maxWidth: 450 }}>
                     <Header as='h2' color='teal' textAlign='center'>
-                        <Image src='https://www.digicert.com/account/images/login-shield.png'/> Đăng nhập tài khoản
+                        <Image src='https://www.digicert.com/account/images/login-shield.png' /> Đăng nhập tài khoản
                     </Header>
                     <Form size='large' loading={loading} error={formError !== ''}>
                         <Segment stacked>
@@ -157,15 +159,15 @@ class LoginScreen extends React.Component {
                                 attached
                                 header='Error'
                                 content={formError}
-                                style={{marginBottom: '10px'}}
+                                style={{ marginBottom: '10px' }}
                             />
                             <Button primary fluid size='large' onClick={this.onLoginClick}>
                                 Đăng nhập
                             </Button>
-                            <div style={{marginTop: '10px'}}>
+                            <div style={{ marginTop: '10px' }}>
                                 <a href="/forgot">Quên mật khẩu?</a>
                             </div>
-                            <div style={{marginTop: '10px'}}>
+                            <div style={{ marginTop: '10px' }}>
                                 <a href={"/register"}>Chưa có tài khoản, đăng ký ngay!</a>
                             </div>
                         </Segment>

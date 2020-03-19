@@ -1,9 +1,9 @@
 import React from 'react'
-import {Button, Dropdown, Image, Menu} from 'semantic-ui-react'
-import {anonymousCall, getToken, getUserInfo, removeToken, setToken} from "../../utils/ApiUtils";
-import {APP_NAME, SERVER_API, SERVER_FILES} from "../../config";
-import {Log} from "../../utils/LogUtil";
-import {withRouter} from "react-router-dom";
+import { Button, Dropdown, Image, Menu } from 'semantic-ui-react'
+import { anonymousCall, getToken, getUserInfo, removeToken, setToken } from "../../utils/ApiUtils";
+import { APP_NAME, SERVER_API, SERVER_FILES } from "../../config";
+import { Log } from "../../utils/LogUtil";
+import { withRouter } from "react-router-dom";
 import './home.css'
 class AppBar extends React.Component {
     _isMounted = false
@@ -26,8 +26,8 @@ class AppBar extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const {navigate, subjectId, subjectName} = this.state
-        const {history} = this.props
+        const { navigate, subjectId, subjectName } = this.state
+        const { history } = this.props
         if (prevState.navigate !== navigate) {
             history.push(navigate)
         }
@@ -75,20 +75,38 @@ class AppBar extends React.Component {
         setToken(token)
     }
 
+    navigateToDashboard(role) {
+        if (role === 'admin') {
+            return '/admin/'
+        }
+        else if (role === 'teacher' || role === 'parent') {
+            return '/admin/users';
+        }
+        return '/'
+    }
+
+
     renderButtonGroup() {
         const token = getToken()
         if (token) {
             return (
-                <Dropdown text={this.state.user ? this.state.user.name : ''} pointing className='link item'>
+                <Dropdown text={this.state.user ? this.state.user.name : ''} pointing className='link item' style={{fontSize:'13pt'}}>
                     <Dropdown.Menu>
-                        <Dropdown.Item as={'a'} onClick={() => this.navigateTo('/profile')} icon='user'
-                                       text="Tài khoản"/>
-                        <Dropdown.Item as={'a'} onClick={() => this.navigateTo('/history')} icon='history'
-                                       text="Lịch sử làm bài"/>
-                        {this.state.user && this.state.user.role !== 'user' ?
-                            <Dropdown.Item as={'a'} onClick={() => this.navigateTo('/admin')} icon='dashboard'
-                                           text="Quản trị"/> : null}
-                        <Dropdown.Item onClick={() => this.logoutClick()} icon='log out' text="Đăng xuất"/>
+                        <Dropdown.Item as={'a'} onClick={() => this.navigateTo('/profile')}
+                            icon='user'
+                            text="Tài khoản" />
+                        {
+                            this.state.user && this.state.user.role !== 'parent' ?
+                                <Dropdown.Item as={'a'} onClick={() => this.navigateTo('/history')}
+                                    icon='history'
+                                    text="Lịch sử làm bài" /> : null
+                        }
+                        {
+                            this.state.user && this.state.user.role !== 'user' ?
+                                <Dropdown.Item as={'a'} onClick={() => this.navigateTo(this.navigateToDashboard(this.state.user.role))} icon='dashboard'
+                                    text={this.state.user.role === 'parent' ? 'Theo dõi học tập' : "Quản trị"} /> : null
+                        }
+                        <Dropdown.Item onClick={() => this.logoutClick()} icon='log out' text="Đăng xuất" />
                     </Dropdown.Menu>
                 </Dropdown>
             )
@@ -96,7 +114,7 @@ class AppBar extends React.Component {
             return (
                 <div>
                     <Button as={'a'} onClick={() => this.navigateTo('/login')} color='orange'
-                            style={{marginRight: '5px'}}>Đăng nhập</Button>
+                        style={{ marginRight: '5px' }}>Đăng nhập</Button>
                     <Button as={'a'} onClick={() => this.navigateTo('/register')} color='grey'>Đăng ký</Button>
                 </div>
             )
@@ -129,28 +147,28 @@ class AppBar extends React.Component {
         return (
             <Menu color={'blue'} fixed='top' inverted size={'mini'} stackable>
                 <Menu.Menu position='left'>
-                    <Menu.Item header as='a' style={{paddingRight: '50px'}}>
-                        <Image size='mini' src={`${SERVER_FILES}/logo.png`} style={{marginRight: '1.5em'}}/>
-                        <span style={{fontSize: '12pt'}}>{APP_NAME}</span>
+                    <Menu.Item header as='a' style={{ paddingRight: '50px' }}>
+                        <Image size='mini' src={`${SERVER_FILES}/logo.png`} style={{ marginRight: '1.5em' }} />
+                        <span style={{ fontSize: '12pt' }}>{APP_NAME}</span>
                     </Menu.Item>
                 </Menu.Menu>
                 {
                     this.state.menu.map(item => {
                         return (
-                                <Dropdown  key={item.className} text={item.className} pointing className={'item'}>
-                                    <Dropdown.Menu>
-                                        {
-                                            item.subjects.map(subject => {
-                                                return (
-                                                    <Dropdown.Item key={subject._id}
-                                                                   onClick={() => this.props.history.push('/subject/' + subject._id)}>
-                                                        {subject.name}
-                                                    </Dropdown.Item>
-                                                )
-                                            })
-                                        }
-                                    </Dropdown.Menu>
-                                </Dropdown>
+                            <Dropdown key={item.className} text={item.className} pointing className={'item'}>
+                                <Dropdown.Menu>
+                                    {
+                                        item.subjects.map(subject => {
+                                            return (
+                                                <Dropdown.Item key={subject._id}
+                                                    onClick={() => this.props.history.push('/subject/' + subject._id)}>
+                                                    {subject.name}
+                                                </Dropdown.Item>
+                                            )
+                                        })
+                                    }
+                                </Dropdown.Menu>
+                            </Dropdown>
                         )
                     })
                 }

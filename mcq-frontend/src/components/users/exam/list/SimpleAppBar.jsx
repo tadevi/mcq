@@ -1,8 +1,8 @@
 import React from 'react'
-import {Button, Dropdown, Header, Image, Menu} from 'semantic-ui-react'
-import {Link, withRouter} from 'react-router-dom'
-import {getToken, getUserInfo, removeToken, setToken} from "../../../../utils/ApiUtils";
-import {APP_NAME, SERVER_FILES} from "../../../../config";
+import { Button, Dropdown, Header, Image, Menu } from 'semantic-ui-react'
+import { Link, withRouter } from 'react-router-dom'
+import { getToken, getUserInfo, removeToken, setToken } from "../../../../utils/ApiUtils";
+import { APP_NAME, SERVER_FILES } from "../../../../config";
 import './exam.css'
 
 /** This file has been checked!
@@ -71,35 +71,38 @@ class SimpleAppBar extends React.Component {
         setToken(token)
     }
 
+    navigateToDashboard(role) {
+        if (role === 'admin') {
+            return '/admin/'
+        }
+        else if (role === 'teacher' || role === 'parent') {
+            return '/admin/users';
+        }
+        return '/'
+    }
+
     renderButtonGroup() {
         const token = getToken()
-        const {user} = this.state
+        const { user } = this.state
         if (token) {
             return (
-                <Dropdown text={this.state.user ? this.state.user.name : ''} pointing className='link item'>
+                <Dropdown text={this.state.user ? this.state.user.name : ''} pointing className='link item' style={{fontSize:'13pt'}}>
                     <Dropdown.Menu>
-                        <Dropdown.Item as={'a'}
-                                       onClick={() => this.navigateTo('/profile')}
-                                       icon='user'
-                                       text="Tài khoản"/>
-                        <Dropdown.Item as={'a'}
-                                       onClick={() => this.navigateTo('/history')}
-                                       icon='history'
-                                       text="Lịch sử làm bài"/>
+                        <Dropdown.Item as={'a'} onClick={() => this.navigateTo('/profile')}
+                            icon='user'
+                            text="Tài khoản" />
                         {
-                            user && user.role !== 'user'
-                                ?
-                                <Dropdown.Item
-                                    as={'a'}
-                                    onClick={() => this.navigateTo('/admin')}
-                                    icon='dashboard'
-                                    text="Quản trị"/>
-                                : null
+                            this.state.user && this.state.user.role !== 'parent' ?
+                                <Dropdown.Item as={'a'} onClick={() => this.navigateTo('/history')}
+                                    icon='history'
+                                    text="Lịch sử làm bài" /> : null
                         }
-                        <Dropdown.Item
-                            onClick={() => this.logoutClick()}
-                            icon='log out'
-                            text="Đăng xuất"/>
+                        {
+                            this.state.user && this.state.user.role !== 'user' ?
+                                <Dropdown.Item as={'a'} onClick={() => this.navigateTo(this.navigateToDashboard(this.state.user.role))} icon='dashboard'
+                                    text={this.state.user.role === 'parent' ? 'Theo dõi học tập' : "Quản trị"} /> : null
+                        }
+                        <Dropdown.Item onClick={() => this.logoutClick()} icon='log out' text="Đăng xuất" />
                     </Dropdown.Menu>
                 </Dropdown>
             )
@@ -110,7 +113,7 @@ class SimpleAppBar extends React.Component {
                         as={'a'}
                         onClick={() => this.navigateTo('/login')}
                         color='orange'
-                        style={{marginRight: '5px'}}>
+                        style={{ marginRight: '5px' }}>
                         Đăng nhập
                     </Button>
                     <Button
@@ -129,18 +132,18 @@ class SimpleAppBar extends React.Component {
     }
 
     render() {
-        const {fixed, header} = this.props
+        const { fixed, header } = this.props
         return (
             <Menu color='blue' fixed={fixed ? 'top' : undefined} inverted borderless size={'mini'} stackable>
-                <Menu.Item position='left' style={{paddingRight: '50px'}} header as={Link} to={'/'}>
-                    <Image size='mini' src={`${SERVER_FILES}/logo.png`} style={{marginRight: '1.5em'}}/>
-                    <span style={{fontSize: '12pt'}}>{APP_NAME}</span>
+                <Menu.Item position='left' style={{ paddingRight: '50px' }} header as={Link} to={'/'}>
+                    <Image size='mini' src={`${SERVER_FILES}/logo.png`} style={{ marginRight: '1.5em' }} />
+                    <span style={{ fontSize: '12pt' }}>{APP_NAME}</span>
                 </Menu.Item>
                 <b className='vertical-center'>
                     {header || ''}
                 </b>
                 <Menu.Menu position='right'>
-                    <Menu.Item style={{fontSize: '10pt', fontWeight: '500'}}>
+                    <Menu.Item style={{ fontSize: '10pt', fontWeight: '500' }}>
                         {this.renderButtonGroup()}
                     </Menu.Item>
                 </Menu.Menu>
