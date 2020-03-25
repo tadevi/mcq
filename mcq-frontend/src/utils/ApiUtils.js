@@ -188,7 +188,7 @@ export function getRole(role) {
         return 'Phụ huynh'
     }
     else if(role=='dean'){
-        return 'Quản trị trườngß'
+        return 'Quản trị trường'
     }
     return 'Undefined'
 }
