@@ -198,7 +198,7 @@ class TableExam extends React.Component {
         return examData.length > 0 ? examData.map(item => {
             return (
                 <Table.Row key={item._id}>
-                    <Table.Cell textAlign={'center'}>{item.className || ''}</Table.Cell>
+                    <Table.Cell >{item.className || ''}</Table.Cell>
                     <Table.Cell>{item.subjectName || ''}</Table.Cell>
                     <Table.Cell>{item.contentName || ''}</Table.Cell>
                     <Table.Cell>{item.lessonName || ''}</Table.Cell>
@@ -206,8 +206,8 @@ class TableExam extends React.Component {
                     <Table.Cell><Moment format="DD/MM/YYYY HH:mm">
                         {item.datetime}
                     </Moment></Table.Cell>
-                    <Table.Cell textAlign={'center'}>{item.userEmail}</Table.Cell>
-                    <Table.Cell textAlign={'center'}>
+                    <Table.Cell >{item.userEmail}</Table.Cell>
+                    <Table.Cell >
                         <Dropdown
                             icon='sidebar'
                             disabled={this.state.loading}>

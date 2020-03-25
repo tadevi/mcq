@@ -1,7 +1,7 @@
 import Axios from "axios"
-import {Cookies} from "react-cookie";
-import {DEBUG, SERVER_API} from "../config";
-import {Log} from "./LogUtil";
+import { Cookies } from "react-cookie";
+import { DEBUG, SERVER_API } from "../config";
+import { Log } from "./LogUtil";
 
 const cookies = new Cookies()
 Axios.defaults.validateStatus = function () {
@@ -16,7 +16,7 @@ export function userCall(method, url, onSuccess, onFailed, onError, onFinally) {
             Authorization: getToken()
         }
     })
-        .then(({data: res}) => {
+        .then(({ data: res }) => {
             Log(`response of ${method} ${url}: `, res)
             if (res.success) {
                 onSuccess(res.data)
@@ -39,7 +39,7 @@ export function anonymousCall(method, url, onSuccess, onFailed, onError, onFinal
         method,
         url
     })
-        .then(({data: res}) => {
+        .then(({ data: res }) => {
             Log(`response of ${method} ${url}: `, res)
             if (res.success) {
                 onSuccess(res.data)
@@ -64,7 +64,7 @@ export function anonymousCallWithData(method, url, data, onSuccess, onFailed, on
         url,
         data
     })
-        .then(({data: res}) => {
+        .then(({ data: res }) => {
             Log(`response of ${method} ${url}: `, res)
             if (res.success) {
                 onSuccess(res.data)
@@ -91,7 +91,7 @@ export function userCallWithData(method, url, data, onSuccess, onFailed, onError
         },
         data
     })
-        .then(({data: res}) => {
+        .then(({ data: res }) => {
             Log('body data', data)
             Log(`response of ${method} ${url}: `, res)
             if (res.success) {
@@ -121,7 +121,7 @@ export function getUserInfo(onSuccess, onError, onFinish) {
                 Authorization: token
             }
         })
-            .then(({data: res}) => {
+            .then(({ data: res }) => {
                 if (res.success) {
                     onSuccess(res.data)
                 } else {
@@ -142,7 +142,7 @@ export function getUserInfo(onSuccess, onError, onFinish) {
 }
 
 export function getToken() {
-    return cookies.get('token', {path: '/'})
+    return cookies.get('token', { path: '/' })
 }
 
 export function setToken(token) {
@@ -154,7 +154,7 @@ export function setToken(token) {
 }
 
 export function removeToken() {
-    cookies.remove('token', {path: '/'})
+    cookies.remove('token', { path: '/' })
 }
 
 export function transformUrl(url) {
@@ -174,16 +174,21 @@ export function transformUrl(url) {
     return url
 }
 
+export const roleSupport = ['teacher', 'admin', 'parent', 'user','dean']
+
 export function getRole(role) {
     if (role === 'admin') {
-        return 'Quản trị viên'
+        return 'Quản trị hệ thống'
     } else if (role === 'user') {
         return 'Học sinh'
     } else if (role === 'teacher') {
         return 'Giáo viên'
     }
-    else if(role==='parent'){
+    else if (role === 'parent') {
         return 'Phụ huynh'
+    }
+    else if(role=='dean'){
+        return 'Quản trị trườngß'
     }
     return 'Undefined'
 }
@@ -193,4 +198,21 @@ export function parseBlob(data, onFinish) {
     })
 }
 
-export const roleSupport=['teacher','admin','parent','user']
+export const uploadFile = (url, formData, onSuccess, onError, onFinally) => {
+    Axios.post(url, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: getToken()
+        }
+    })
+        .then((res) => {
+            const data = res.data
+            Log('response', data)
+            if (!data.success)
+                onError(data.message)
+            else
+                onSuccess(data)
+        })
+        .catch(err => onError(err))
+        .finally(onFinally);
+}

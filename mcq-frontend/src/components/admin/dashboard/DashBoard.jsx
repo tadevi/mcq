@@ -7,7 +7,7 @@ import LecturePage from "../lecture/LecturePage";
 import FullScreenEditor from "../editor/FullScreenEditor";
 import AccountManagement from "../account/AccountManagement";
 import DashBoardMenu from "./DashBoardMenu";
-
+import CreateAdvertisement from '../advertisement/CreateAdvertisement'
 
 const routeConfig = [
     {
@@ -22,22 +22,29 @@ const routeConfig = [
         content: "Quản lý tài khoản",
         component: <AccountManagement/>,
         icon: "user",
-        require: ['admin','teacher','parent']
+        require: ['admin','teacher','parent','dean']
     },
     {
         route: "/admin/exams",
         content: "Đề thi",
         component: <ExamPage/>,
         icon: "list",
-        require: ['admin', 'teacher']
+        require: ['admin', 'teacher','dean']
     },
     {
         route: "/admin/lectures",
         content: "Bài giảng",
         component: <LecturePage/>,
         icon: "dochub",
-        require: ['admin', 'teacher']
-    }
+        require: ['admin', 'teacher','dean']
+    },
+    // {
+    //     route: "/admin/advertisements",
+    //     content:"QC",
+    //     component: <CreateAdvertisement />,
+    //     icon: "adversal",
+    //     require: ['admin']
+    // }
 ]
 
 const MyRouter = ({role}) => (
@@ -63,7 +70,6 @@ const segmentStyle = {
     minHeight: '80vh',
     maxHeight: '85vh',
     overflow: 'auto',
-    margin: '10px'
 }
 
 class DashBoard extends Component {
@@ -133,7 +139,7 @@ class DashBoard extends Component {
                 <Container fluid>
                     <Grid stackable columns={2} className="fill-content">
                         <Grid.Row stretched>
-                            <Grid.Column width={3}>
+                            <Grid.Column width={2}>
                                 <Menu vertical fluid>
                                     {
                                         routeConfig.filter(it => it.require.findIndex(i => i === user.role) > -1).map((item, index) => {
@@ -150,7 +156,7 @@ class DashBoard extends Component {
                                     }
                                 </Menu>
                             </Grid.Column>
-                            <Grid.Column width={13}>
+                            <Grid.Column width={14}>
                                 <Segment style={segmentStyle}>
                                     <MyRouter role={user.role}/>
                                 </Segment>

@@ -138,12 +138,12 @@ class TableLectures extends React.Component {
             return (
                 <Table.Row key={item._id} style={{ cursor: 'pointer' }}
                     onClick={() => window.open(item.lectureUrl, '_blank')}>
-                    <Table.Cell textAlign={'center'}>{item.className}</Table.Cell>
-                    <Table.Cell textAlign={'center'}>{item.subjectName}</Table.Cell>
-                    <Table.Cell textAlign={'center'}>{item.contentName}</Table.Cell>
-                    <Table.Cell textAlign={'center'}>{item.lessonName}</Table.Cell>
-                    <Table.Cell textAlign={'center'}>{item.name}</Table.Cell>
-                    <Table.Cell textAlign={'center'}>
+                    <Table.Cell >{item.className}</Table.Cell>
+                    <Table.Cell >{item.subjectName}</Table.Cell>
+                    <Table.Cell >{item.contentName}</Table.Cell>
+                    <Table.Cell >{item.lessonName}</Table.Cell>
+                    <Table.Cell >{item.name}</Table.Cell>
+                    <Table.Cell >
                         <Moment format="DD/MM/YYYY HH:mm">
                             {item.datetime}
                         </Moment>
@@ -151,7 +151,7 @@ class TableLectures extends React.Component {
                     <Table.Cell>
                         {item.userEmail}
                     </Table.Cell>
-                    <Table.Cell textAlign={'center'}>
+                    <Table.Cell >
                         <Button.Group>
                             <Button
                                 basic

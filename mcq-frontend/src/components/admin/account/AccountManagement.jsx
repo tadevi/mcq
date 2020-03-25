@@ -279,20 +279,20 @@ class AccountManagement extends React.Component {
             return (
                 <Table.Row key={item._id}>
                     <Table.Cell>{item.name}</Table.Cell>
-                    <Table.Cell textAlign={'center'}>
+                    <Table.Cell >
                         {getRole(item.role)}
                     </Table.Cell>
-                    <Table.Cell textAlign={'center'}>
+                    <Table.Cell>
                         <Moment format="DD/MM/YYYY HH:mm">
                             {item.datetime}
                         </Moment>
                     </Table.Cell>
-                    <Table.Cell textAlign={'center'}>
+                    <Table.Cell >
                         {Math.round(item.remain * 10 / 60) / 10}
                     </Table.Cell>
                     <Table.Cell>{item.email}</Table.Cell>
                     <Table.Cell>{item.phone}</Table.Cell>
-                    <Table.Cell textAlign='center'>
+                    <Table.Cell >
 
                         {
                             this.renderButtonGroup(item)
@@ -457,7 +457,7 @@ class AccountManagement extends React.Component {
                     <Button
                         basic
                         color={'green'}
-                        style={{ float: 'right', marginLeft:'10px' }}
+                        style={{ float: 'right', marginLeft: '10px' }}
                         icon={'download'}
                         onClick={() => this.exportData()}
                     />
@@ -476,7 +476,7 @@ class AccountManagement extends React.Component {
                         }}
                     />
                 </div>
-                <Table basic={'very'} sortable={true} singleLine={true}>
+                <Table basic={'very'} sortable={true}>
                     {this.renderHeaderTable()}
                     <Table.Body>
                         {this.renderContentTable()}

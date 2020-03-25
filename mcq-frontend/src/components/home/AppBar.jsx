@@ -79,7 +79,7 @@ class AppBar extends React.Component {
         if (role === 'admin') {
             return '/admin/'
         }
-        else if (role === 'teacher' || role === 'parent') {
+        else if (role === 'teacher' || role === 'parent' || role === 'dean') {
             return '/admin/users';
         }
         return '/'
