@@ -96,8 +96,8 @@ class ChapterComponent extends React.Component {
         imgUrl = "https://drive.google.com/uc?export=view&id=" + id;
       }
       return (
-        <a href={desUrl}>
-          <Image src={imgUrl} style={{ maxHeight: "8em", width: "60%" }} />
+        <a href={desUrl} target="_blank">
+          <Image src={imgUrl} />
         </a>
       );
     }
@@ -115,8 +115,8 @@ class ChapterComponent extends React.Component {
         imgUrl = "https://drive.google.com/uc?export=view&id=" + id;
       }
       return (
-        <a href={destUrl}>
-          <Image src={imgUrl} style={{ maxWidth: "8em", height: "100%" }} />
+        <a href={destUrl} target="_blank">
+          <Image src={imgUrl} />
         </a>
       );
     }
