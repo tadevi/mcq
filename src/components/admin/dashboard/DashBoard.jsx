@@ -41,7 +41,7 @@ const routeConfig = [
         require: ['admin', 'teacher','dean']
     },
     {
-        route: "/admin/advertisements",
+        route: "/admin/qc",
         content:stringResources.advertisement.screenTitle,
         component: <TableAdvertisement />,
         icon: "adversal",

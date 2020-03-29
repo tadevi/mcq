@@ -264,7 +264,7 @@ function TableAdvertisement() {
     setLoading(true);
     userCall(
       "GET",
-      `${SERVER_API}/ads?${queryString.get()}`,
+      `${SERVER_API}/qcs?${queryString.get()}`,
       setData,
       setErrorWithTimeOut,
       setErrorWithTimeOut,
@@ -286,7 +286,7 @@ function TableAdvertisement() {
     setLoading(true);
     userCall(
       "GET",
-      `${SERVER_API}/ads/${id}`,
+      `${SERVER_API}/qcs/${id}`,
       data => {
         setEditedAds(data);
         setEditMode(true);
@@ -304,7 +304,7 @@ function TableAdvertisement() {
     setLoading(true);
     userCallWithData(
       "PUT",
-      `${SERVER_API}/ads/${_id}`,
+      `${SERVER_API}/qcs/${_id}`,
       dt,
       () => {
         setSuccessWithTimeOut(stringResources[screenName].labelEditAdsSuccess);
@@ -326,7 +326,7 @@ function TableAdvertisement() {
     setLoading(true);
     userCall(
       "DELETE",
-      `${SERVER_API}/ads/${deleteId}`,
+      `${SERVER_API}/qcs/${deleteId}`,
       () => {
         setDeleteId("");
         getListAds({ page: data.page, search: textSearch });
@@ -347,7 +347,7 @@ function TableAdvertisement() {
     setLoading(true);
     userCallWithData(
       "POST",
-      `${SERVER_API}/ads`,
+      `${SERVER_API}/qcs`,
       dt,
       res => {
         setSuccessWithTimeOut(stringResources[screenName].labelAddAdsSuccess);

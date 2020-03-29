@@ -69,7 +69,7 @@ class ChapterComponent extends React.Component {
   getAds() {
     anonymousCall(
       "GET",
-      `${SERVER_API}/ad`,
+      `${SERVER_API}/qc`,
       data => {
         this.setState({
           adsVertical: data.vertical,
