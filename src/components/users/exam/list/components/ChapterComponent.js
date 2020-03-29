@@ -97,7 +97,7 @@ class ChapterComponent extends React.Component {
       }
       return (
         <a href={desUrl} target="_blank">
-          <Image src={imgUrl} />
+          <Image src={imgUrl} style={{maxHeight:'9em'}} />
         </a>
       );
     }

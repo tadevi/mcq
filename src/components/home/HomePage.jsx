@@ -89,7 +89,7 @@ class HomePage extends Component {
       }
       return (
         <a href={desUrl} target="_blank">
-          <Image src={imgUrl}  />
+          <Image src={imgUrl}  style={{maxHeight:'9em'}}/>
         </a>
       );
     }
@@ -108,7 +108,7 @@ class HomePage extends Component {
       }
       return (
         <a href={destUrl} target="_blank">
-          <Image src={imgUrl} />
+          <Image src={imgUrl}  />
         </a>
       );
     }
