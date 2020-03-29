@@ -1,0 +1,2 @@
+api get /exams/:id khong tra ve detail cua exam cho admin de edit
+api put /users/:id
