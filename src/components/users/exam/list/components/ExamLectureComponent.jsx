@@ -4,6 +4,7 @@ import {anonymousCall, userCallWithData} from "../../../../../utils/ApiUtils";
 import {SERVER_API, SERVER_FILES} from "../../../../../config";
 import Moment from "react-moment";
 import {withRouter} from "react-router-dom";
+import Plan from '../../../../admin/components/Plan';
 
 class ExamLectureComponent extends React.Component {
     state = {
@@ -96,9 +97,12 @@ class ExamLectureComponent extends React.Component {
                                         <Table.Cell>
                                             <div>
                                                 <Image src={`${SERVER_FILES}/${item.type}.png`}
-                                                       verticalAlign={'middle'}/>
+                                                       verticalAlign={'middle'} style={{marginRight:'10px'}}/>
                                                 <span style={{fontSize: '12pt'}}>{item.name}</span>
                                             </div>
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <Plan plan={item.plan} />
                                         </Table.Cell>
                                         <Table.Cell>
                                             <span style={{fontSize: '12pt'}}>

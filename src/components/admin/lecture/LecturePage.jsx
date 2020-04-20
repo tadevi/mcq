@@ -357,7 +357,7 @@ class LecturePage extends React.Component {
                 ...this.state.lectureToEdit,
                 [name]: value
             }
-        })
+        },()=>console.log(this.state.lectureToEdit))
 
     }
 

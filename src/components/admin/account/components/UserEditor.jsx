@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, Checkbox, Form, Select, Table } from 'semantic-ui-react'
+import { Checkbox, Form, Select } from 'semantic-ui-react'
 import { getRole, roleSupport } from "../../../../utils/ApiUtils";
+import { planOptions, PLAN_TYPE } from "../../../constant/ServerConst";
 
 const options = roleSupport.map(item => ({
     key: item,
@@ -13,7 +14,8 @@ export default class UserEditor extends React.Component {
         active: this.props.defaultActive || false,
         remain: Math.round(this.props.defaultRemain * 10 / 60) / 10 || 300,
         role: this.props.defaultRole || 'user',
-        password:''
+        password:'',
+        plan: this.props.plan || PLAN_TYPE.FREE
     }
 
     handleChange(name, value) {
@@ -60,6 +62,17 @@ export default class UserEditor extends React.Component {
                         placeholder={'Nhập để thay đổi mật khẩu'}
                         disabled={!this.state.active}
                     />
+                </Form.Field>
+                <Form.Field>
+                  <label>Loại bài giảng</label>
+                  <Select
+                    options={planOptions}
+                    defaultValue={this.state.plan}
+                    value={this.state.plan}
+                    onChange={(e, { value }) =>
+                      this.handleChange("plan", value)
+                    }
+                  />
                 </Form.Field>
             </Form>
         )

@@ -20,6 +20,8 @@ import fileDownload from "js-file-download";
 import UserEditor from "./components/UserEditor";
 import { Log } from "../../../utils/LogUtil";
 import Dialog from "../../Dialog";
+import Plan from "../components/Plan";
+import { PLAN_LABEL } from "../../constant/ServerConst";
 
 const initialState = {
     error: '',
@@ -278,7 +280,10 @@ class AccountManagement extends React.Component {
         return (data && data.length > 0) ? data.map(item => {
             return (
                 <Table.Row key={item._id}>
-                    <Table.Cell>{item.name}</Table.Cell>
+                    <Table.Cell>
+                        <Plan plan={item[PLAN_LABEL]} />
+                        {item.name}
+                    </Table.Cell>
                     <Table.Cell >
                         {getRole(item.role)}
                     </Table.Cell>

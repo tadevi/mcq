@@ -262,8 +262,8 @@ class ExamPage extends Component {
             })
         }
         this.setLoading(true)
-        const { answer, lessonId, datetime, examUrl, explainUrl, name, note, password, time, total } = this.state.examToEdit
-        const data = { answer, lessonId, datetime, explainUrl, examUrl, name, note, password, time, total }
+        const { answer, lessonId, datetime, examUrl, explainUrl, name, note, password, time, total, plan } = this.state.examToEdit
+        const data = { answer, lessonId, datetime, explainUrl, examUrl, name, note, password, time, total, plan }
         userCallWithData(
             'PUT',
             `${SERVER_API}/exams/${id}`,

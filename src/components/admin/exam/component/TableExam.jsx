@@ -6,6 +6,8 @@ import Axios from "axios";
 import {SERVER_API} from "../../../../config";
 import {getToken, parseBlob} from "../../../../utils/ApiUtils";
 import fileDownload from "js-file-download";
+import Plan from '../../components/Plan';
+import { PLAN_LABEL } from '../../../constant/ServerConst';
 
 class TableExam extends React.Component {
     constructor(props) {
@@ -202,7 +204,10 @@ class TableExam extends React.Component {
                     <Table.Cell>{item.subjectName || ''}</Table.Cell>
                     <Table.Cell>{item.contentName || ''}</Table.Cell>
                     <Table.Cell>{item.lessonName || ''}</Table.Cell>
-                    <Table.Cell>{item.name || ''}</Table.Cell>
+                    <Table.Cell>
+                        <Plan plan={item[PLAN_LABEL]} />
+                        {item.name || ''}
+                        </Table.Cell>
                     <Table.Cell><Moment format="DD/MM/YYYY HH:mm">
                         {item.datetime}
                     </Moment></Table.Cell>
@@ -231,7 +236,7 @@ class TableExam extends React.Component {
                     </Table.Cell>
                 </Table.Row>
             )
-        }) : <p>Không có dữ liệu</p>
+        }) : 'Không có dữ liệu'
     }
 }
 

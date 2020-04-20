@@ -4,6 +4,9 @@ import { Link, withRouter } from 'react-router-dom'
 import { getToken, getUserInfo, removeToken, setToken } from "../../../../utils/ApiUtils";
 import { APP_NAME, SERVER_FILES } from "../../../../config";
 import './exam.css'
+import Plan from '../../../admin/components/Plan';
+import { PLAN_LABEL } from '../../../constant/ServerConst';
+
 
 /** This file has been checked!
  *
@@ -80,13 +83,23 @@ class SimpleAppBar extends React.Component {
         }
         return '/'
     }
-
+    renderUserName() {
+        const { user } = this.state;
+        if (user) {
+          return (
+            <div>
+              <Plan plan={user[PLAN_LABEL]} />
+              {user.name ? user.name : ""}
+            </div>
+          );
+        }
+      }
     renderButtonGroup() {
         const token = getToken()
         const { user } = this.state
         if (token) {
             return (
-                <Dropdown text={this.state.user ? this.state.user.name : ''} pointing className='link item' style={{fontSize:'13pt'}}>
+                <Dropdown text={this.renderUserName()} pointing className='link item' style={{fontSize:'13pt'}}>
                     <Dropdown.Menu>
                         <Dropdown.Item as={'a'} onClick={() => this.navigateTo('/profile')}
                             icon='user'
