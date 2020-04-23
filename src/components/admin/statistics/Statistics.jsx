@@ -7,6 +7,7 @@ import fileDownload from "js-file-download";
 import Axios from "axios";
 import _ from "lodash";
 import {Default} from 'react-spinners-css'
+import { Log } from "../../../utils/LogUtil";
 
 const boxStyle = {
   height: "150px",
@@ -17,7 +18,9 @@ const boxStyle = {
   justitfyContent: "space-between",
   alignItems: "center",
   borderRadius: "5px",
-  marginLeft:'10px'
+  marginLeft:'10px',
+  marginTop: '10px',
+  marginBottom:'10px'
 };
 const headerStyle = {
   color: "rgb(57,137,204)",
@@ -28,7 +31,7 @@ const headerStyle = {
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   textAlign:'center',
-  fontFamily:'Arial, Helvetica, sans-serif',
+  fontFamily:'Tahoma, Geneva, sans-serif',
   marginTop:'5px'
 };
 const contentStyle = {
@@ -43,9 +46,8 @@ function Box({ title, content }) {
     <div style={boxStyle}>
       <h1 style={headerStyle}>{title}</h1>
       {
-          content? (<h1 style={contentStyle}>{content}</h1>) : (<Default />)
+          _.isNumber(content)?(<h1 style={contentStyle}>{content}</h1>):( <Default />) 
       }
-      
     </div>
   );
 }
@@ -57,14 +59,13 @@ function Statistics() {
   const [doingCount, setDoingCount] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
     userCall(
       "GET",
       `${SERVER_API}/statistic`,
       (data) => setStatistic(data),
       setErrorTimeOut,
       setErrorTimeOut,
-      () => setLoading(false)
+      () => {}
     );
     userCall(
       "GET",
@@ -72,8 +73,12 @@ function Statistics() {
       (data) => setDoingCount(data.doingCount),
       setErrorTimeOut,
       setErrorTimeOut,
-      () => setLoading(false)
+      () => {}
     );
+    return ()=>{
+        clearTimeout(timeout)
+        Log('Clean up time out')
+    }
   }, []);
   const setErrorTimeOut = (err) => {
     setError(err);
@@ -110,20 +115,18 @@ function Statistics() {
         justifyContent: "space-between",
         alignItems: "center",
         flex: 1,
-        minHeight: "30vh",
+        minHeight: "30vh"
       }}
     >
       <Message error hidden={error === null} content={error} />
-      <div style={{ flexDirection: "row" , display:'flex', justifyContent:'flex-start'}}>
+      <div style={{ flexDirection: "row" , display:'flex', justifyContent:'center', flex:'1 0 auto', flexWrap:'wrap'}}>
         <Box title={"Đang làm bài"} content={doingCount} />
         <Box title={"Số đề thi"} content={statistic.examCount} />
         <Box title={"Số bài giảng"} content={statistic.lectureCount} />
         <Box title={"Số lượt làm bài"} content={statistic.answerCount} />
         <Box title={"Số người dùng"} content={statistic.userCount} />
       </div>
-      <Button basic color="green" icon="download" onClick={getAnswerExport}>
-        Xuất bài làm toàn bộ hệ thống
-      </Button>
+      <Button size='massive' basic color="green" icon="download" onClick={getAnswerExport} content='Xuất bài làm toàn bộ hệ thống' />
       <Loader active={loading} />
     </div>
   );
