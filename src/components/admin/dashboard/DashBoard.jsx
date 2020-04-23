@@ -1,15 +1,15 @@
 import React, {Component} from 'react'
-import {Container, Dropdown, Grid, Icon, Image, Loader, Menu, Message, Segment} from 'semantic-ui-react'
+import {Container, Grid, Icon, Loader, Menu, Message, Segment} from 'semantic-ui-react'
 import {Link, Redirect, Route, Switch, withRouter} from "react-router-dom";
 import ExamPage from '../exam/ExamPage';
-import {getToken, getUserInfo, removeToken} from "../../../utils/ApiUtils";
+import {getToken, getUserInfo} from "../../../utils/ApiUtils";
 import LecturePage from "../lecture/LecturePage";
 import FullScreenEditor from "../editor/FullScreenEditor";
 import AccountManagement from "../account/AccountManagement";
 import DashBoardMenu from "./DashBoardMenu";
-import CreateAdvertisement from '../advertisement/CreateAdvertisement'
 import TableAdvertisement from '../advertisement/TableAdvertisement';
 import { stringResources } from '../../../Resources';
+import Statistics from '../statistics/Statistics';
 
 const routeConfig = [
     {
@@ -46,13 +46,20 @@ const routeConfig = [
         component: <TableAdvertisement />,
         icon: "adversal",
         require: ['admin']
+    },
+    {
+        route:"/admin/statistics",
+        content: 'Thống kê',
+        component: <Statistics />,
+        icon:"chart line",
+        require:["admin","dean"]
     }
 ]
 
 const MyRouter = ({role}) => (
     <Switch>
         {
-            routeConfig.slice().reverse().map((item, index) => {
+            routeConfig.slice().reverse().map((item) => {
                 return (
                     <Route exact path={item.route} key={item.route}>
                         {
@@ -69,8 +76,8 @@ const style = {
 }
 
 const segmentStyle = {
-    minHeight: '80vh',
-    maxHeight: '85vh',
+    minHeight: '85vh',
+    maxHeight: '90vh',
     overflow: 'auto',
 }
 
@@ -87,7 +94,7 @@ class DashBoard extends Component {
             data => this.setState({
                 user: data
             }),
-            err => {
+            () => {
                 this.props.history.push('/login')
             },
             () => {
@@ -144,7 +151,7 @@ class DashBoard extends Component {
                             <Grid.Column width={2}>
                                 <Menu vertical fluid>
                                     {
-                                        routeConfig.filter(it => it.require.findIndex(i => i === user.role) > -1).map((item, index) => {
+                                        routeConfig.filter(it => it.require.findIndex(i => i === user.role) > -1).map((item) => {
                                             return (
                                                 <Link to={item.route} key={item.route}>
                                                     <Menu.Item style={pathname === item.route ? style : null}>
