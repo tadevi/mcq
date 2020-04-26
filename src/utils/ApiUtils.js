@@ -247,6 +247,8 @@ export function QueryString() {
     }
   };
   this.get = function() {
-    return this.queryString;
+    if(this.queryString)
+      return "?"+this.queryString;
+    return ""
   };
 }

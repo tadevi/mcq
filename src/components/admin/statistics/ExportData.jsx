@@ -9,6 +9,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { SERVER_API } from "../../../config";
 import { Button, Loader, Container, Header, Message } from "semantic-ui-react";
 import moment from "moment";
+import LineChart from "./LineChart";
+import { Log } from "../../../utils/LogUtil";
 
 Date.prototype.addDays = function (days) {
   var date = new Date(this.valueOf());
@@ -46,7 +48,7 @@ function ExportData() {
       setLoading(false)
       return;
     }
-    console.log(`${SERVER_API}/answers/export?start=${start}&end=${end}`);
+    Log(`${SERVER_API}/answers/export?start=${start}&end=${end}`);
     Axios.get(`${SERVER_API}/answers/export?start=${start}&end=${end}`, {
       headers: {
         Authorization: getToken(),
@@ -79,7 +81,7 @@ function ExportData() {
         width: "80%"
       }}
     >
-      <Header textAlign="center" style={{fontFamily:'Tahoma, Geneva, sans-serif',fontSize:'20pt'}}>Thống kê bài làm toàn bộ hệ thống</Header>
+      <Header textAlign="center" style={{fontFamily:'Tahoma, Geneva, sans-serif',fontSize:'15pt'}}>Thống kê bài làm toàn bộ hệ thống</Header>
       <Loader active={loading} />
       <Message error hidden={error === null} content={error} />
       <div
@@ -120,6 +122,7 @@ function ExportData() {
           />
         </span>
       </div>
+      <LineChart title="" start={moment(startDate).format("YYYY-MM-DD")} end={moment(endDate).format("YYYY-MM-DD")} />
     </Container>
   );
 }

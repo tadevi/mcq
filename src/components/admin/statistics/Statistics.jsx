@@ -9,12 +9,12 @@ import { Log } from "../../../utils/LogUtil";
 import ExportData from './ExportData'
 
 const boxStyle = {
-  height: "150px",
-  width: "250px",
+  height: "100px",
+  width: "200px",
   backgroundColor: "rgb(236,236,236)",
-  display: "flex",
+  display: "block",
   flexDirection: "column",
-  justitfyContent: "space-between",
+  justitfyContent: "center",
   alignItems: "center",
   borderRadius: "5px",
   marginLeft:'10px',
@@ -23,9 +23,9 @@ const boxStyle = {
 };
 const headerStyle = {
   color: "rgb(57,137,204)",
-  fontSize: 24,
+  fontSize: 20,
   fontWeight: "900",
-  width: '240px',
+  width: '200px',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -35,9 +35,9 @@ const headerStyle = {
 };
 const contentStyle = {
   color: "rgb(133,188,111)",
-  fontSize: 45,
+  fontSize: 30,
   fontWeight: "900",
-  alignSelf: "center",
+  textAlign:'center',
 };
 
 function Box({ title, content }) {
@@ -45,7 +45,7 @@ function Box({ title, content }) {
     <div style={boxStyle}>
       <h1 style={headerStyle}>{title}</h1>
       {
-          _.isNumber(content)?(<h1 style={contentStyle}>{content}</h1>):( <Default />) 
+          _.isNumber(content)?(<h1 style={contentStyle}>{content}</h1>):( <div style={contentStyle}><Default /></div>) 
       }
     </div>
   );

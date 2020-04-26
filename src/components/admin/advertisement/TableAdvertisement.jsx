@@ -264,7 +264,7 @@ function TableAdvertisement() {
     setLoading(true);
     userCall(
       "GET",
-      `${SERVER_API}/qcs?${queryString.get()}`,
+      `${SERVER_API}/qcs${queryString.get()}`,
       setData,
       setErrorWithTimeOut,
       setErrorWithTimeOut,
