@@ -3,11 +3,10 @@ import { useState, useEffect } from "react";
 import { userCall, parseBlob, getToken } from "../../../utils/ApiUtils";
 import { SERVER_API } from "../../../config";
 import { Button, Loader, Message } from "semantic-ui-react";
-import fileDownload from "js-file-download";
-import Axios from "axios";
 import _ from "lodash";
 import {Default} from 'react-spinners-css'
 import { Log } from "../../../utils/LogUtil";
+import ExportData from './ExportData'
 
 const boxStyle = {
   height: "150px",
@@ -55,7 +54,6 @@ let timeout = 0;
 function Statistics() {
   const [statistic, setStatistic] = useState({});
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [doingCount, setDoingCount] = useState(null);
 
   useEffect(() => {
@@ -84,29 +82,6 @@ function Statistics() {
     setError(err);
     timeout = setTimeout(() => setError(null), 3000);
   };
-  const getAnswerExport = () => {
-    setLoading(true);
-    Axios.get(`${SERVER_API}/answers/export`, {
-      headers: {
-        Authorization: getToken(),
-      },
-      responseType: "blob",
-    })
-      .then((res) => {
-        if (res.data.type === "application/json") {
-          parseBlob(res.data, ({ message }) => {
-            setErrorTimeOut(message);
-          });
-        } else {
-          let blob = new Blob([res.data], {
-            type: res.headers["content-type"],
-          });
-          fileDownload(blob, "Thong ke bai lam toan he thong.xlsx");
-        }
-      })
-      .catch(setErrorTimeOut)
-      .finally(() => setLoading(false));
-  };
   return (
     <div
       style={{
@@ -115,7 +90,7 @@ function Statistics() {
         justifyContent: "space-between",
         alignItems: "center",
         flex: 1,
-        minHeight: "30vh"
+        minHeight: "60vh"
       }}
     >
       <Message error hidden={error === null} content={error} />
@@ -126,8 +101,7 @@ function Statistics() {
         <Box title={"Số lượt làm bài"} content={statistic.answerCount} />
         <Box title={"Số người dùng"} content={statistic.userCount} />
       </div>
-      <Button size='massive' basic color="green" icon="download" onClick={getAnswerExport} content='Xuất bài làm toàn bộ hệ thống' />
-      <Loader active={loading} />
+      <ExportData />
     </div>
   );
 }
